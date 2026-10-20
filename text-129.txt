@@ -1,0 +1,74 @@
+/* Admin-only optical alignment and responsive rhythm. */
+.gallery-batch:not([data-has-selection=true])>:not(label){display:none!important}
+html .gallery-batch button{min-height:36px;height:auto;white-space:normal;overflow-wrap:break-word;line-height:1.45;padding:7px 6px;align-self:stretch}
+html .gallery-batch label{flex-wrap:wrap;line-height:1.6}
+html .gallery-batch select{min-height:36px;box-sizing:border-box}
+html .gallery-view-tools>button{height:auto;min-height:34px;white-space:normal;line-height:1.45}
+html .gallery-assets .row-tools button{display:grid;place-items:center;padding:0;line-height:1}
+html .gallery-art-row .row-tools{grid-template-columns:24px 24px;gap:3px;align-items:stretch}
+html .gallery-art-row .row-tools button{min-height:24px;height:24px;box-sizing:border-box}
+html .gallery-art-row .row-tools .visibility{grid-column:1/-1;min-width:51px}
+.gallery-download-link{display:inline-flex;align-items:center;min-height:36px;color:#eee;border:1px solid #63404c;border-radius:4px;padding:8px 14px;text-decoration:none;margin-top:12px;max-width:100%;overflow-wrap:anywhere}.gallery-download-link[hidden]{display:none}
+.studio-history-controls{display:inline-flex;align-items:center;gap:4px;flex:none}.studio-history-controls button{display:inline-flex;align-items:center;justify-content:center;gap:4px;min-height:34px;padding:6px 9px;border:1px solid #41414b;border-radius:4px;background:#1b1b20;color:#ccc;font:12px/1.4 inherit}.studio-history-controls button:disabled{opacity:.35;cursor:default}
+html .book-stage > .round svg{display:block;width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round;pointer-events:none}
+html .book-stage > .round{align-self:center;box-sizing:border-box;line-height:0;flex-shrink:0}
+html .stage-head .stage-tools{flex-wrap:wrap;justify-content:flex-end;gap:8px;max-width:100%;min-width:0}
+html .stage-tools .editor-slider{margin:0;padding-right:8px;gap:6px;min-height:30px}
+html .stage-tools .editor-slider label{display:block}
+html .stage-tools .editor-slider input{flex:0 1 64px;min-width:40px}
+html .stage-tools>span{display:none} /* The live zoom value already appears in the zoom rail. */
+html .page-actions{display:grid;grid-template-columns:minmax(88px,1fr) repeat(3,32px);gap:6px;align-items:center}
+html .page-actions>button{width:100%;min-width:0;height:36px;padding:0 8px;display:grid;place-items:center;white-space:nowrap}
+html .page-actions>.icon-button{font-size:18px;line-height:1}
+html .page-item .page-more{display:grid;place-items:center;padding:0;line-height:1}
+html .panel .pages-top{gap:12px}
+html .preview-zoom-rail{box-sizing:border-box}
+html .preview-zoom-rail input[type=range]{min-width:40px;flex-shrink:1}
+html .stage .pager{gap:12px;padding-inline:20px}
+html .stage .pager>#dots{display:flex;flex-wrap:wrap;justify-content:center;gap:5px;min-width:0}
+
+html .project-content .album-grid:not(.list){grid-template-columns:repeat(auto-fill,minmax(min(100%,250px),1fr));gap:32px clamp(20px,2vw,32px);align-items:stretch}
+html .project-content .album-grid:not(.list)>.album-card{width:100%;min-width:0;display:flex;flex-direction:column}
+html .album-grid:not(.list) .album-cover{height:250px;flex:none;padding:16px 20px 24px}
+html .album-grid:not(.list) .album-info{display:flex;flex-direction:column;flex:1;padding-top:14px}
+html .album-grid:not(.list) .album-title-row{min-height:48px;gap:8px}
+html .album-grid:not(.list) .album-title-row h2{font-size:16px;line-height:24px;margin:0}
+html .album-grid:not(.list) .album-meta{min-height:22px;margin:5px 0 14px;line-height:22px}
+html .album-grid:not(.list) .album-actions{margin-top:auto;display:flex;align-items:center;flex-wrap:nowrap;gap:8px}
+html .album-grid:not(.list) .album-actions>button{min-width:0;flex:1;height:38px;min-height:38px;padding:0 8px;white-space:nowrap;font-size:11px}
+html .album-grid .album-more{flex:0 0 38px}
+html .album-grid .album-more summary{box-sizing:border-box}
+html .project-heading .search,html .project-heading .view-toggle{height:40px}
+html .project-heading .view-toggle{flex-shrink:0}
+html .project-heading{margin-bottom:24px;padding-bottom:20px}
+html .hub-gallery-grid{gap:28px}
+html .hub-gallery-info h2{overflow-wrap:anywhere}
+html .library-heading{flex-wrap:wrap;align-items:center}
+html .library-batch{flex-wrap:wrap;align-items:center}
+html .library-grid .asset-caption{min-width:0}
+html .gallery-dialog header button,html .studio-settings-head .studio-settings-close{width:34px;height:34px;min-height:34px;flex:0 0 34px;display:grid;place-items:center;padding:0;line-height:1;border:1px solid #41414b;border-radius:4px;background:#202025}
+html .gallery-stage-head{gap:12px;flex-wrap:wrap}
+html .studio-settings .studio-settings-actions{align-items:center}
+html .studio-settings .studio-setting-row>div{min-width:0}
+@media(min-width:981px){
+ html .project-shell{grid-template-columns:220px minmax(0,1fr)}
+ html .project-sidebar{padding-inline:20px}
+ html .project-content{padding-inline:clamp(24px,3vw,48px)}
+ html .topbar .top-actions{row-gap:8px}
+}
+@media(max-width:980px){
+ html .book-stage{padding-inline:14px;gap:10px}
+ html .book-stage .book-wrap{max-width:calc(100% - 88px)}
+ html .stage-head .stage-tools{justify-content:flex-start;margin-left:0}
+ html .album-grid.list .album-actions{align-items:center}
+}
+@media(max-width:680px){
+ html .project-content .album-grid:not(.list){grid-template-columns:repeat(auto-fill,minmax(min(100%,240px),1fr));gap:28px 18px}
+ html .album-grid:not(.list)>.album-card{max-width:420px;justify-self:center}
+ html .stage-head .stage-tools{gap:4px 8px}
+ html .stage-tools .editor-slider{font-size:9px;padding-right:6px;gap:4px}
+ html .stage-tools .editor-slider input{width:48px}
+ html .studio-settings .studio-setting-row{align-items:flex-start}
+ html .studio-settings .studio-setting-row select{flex-shrink:0}
+ html .library-heading>*{max-width:100%}
+}

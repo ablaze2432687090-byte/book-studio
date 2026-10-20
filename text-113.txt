@@ -1,0 +1,245 @@
+<!doctype html>
+<html lang="zh-CN">
+<head><script src="/i18n-catalog.js"></script><script src="/studio-i18n.js"></script><link rel="stylesheet" href="/studio-i18n.css"><script src="/overlay-dismiss.js"></script>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>BOOK STUDIO · 画册编辑</title>
+  <link rel="stylesheet" href="/studio-navigation.css"><script src="/studio-navigation.js"></script>
+  <meta name="description" content="专注画册装帧、纸张质感与翻页呈现的照片画册后台">
+  <link rel="stylesheet" href="/styles.css?v=20261009-effects-1&crop=20261008-1">
+  <link rel="stylesheet" href="/studio-shell.css"><script defer src="/studio-shell.js"></script>
+</head>
+<body>
+  <div class="app-shell">
+    <nav class="rail" aria-label="主导航">
+      <a class="rail-brand" href="/" aria-label="ATELIER 首页">A<span>°</span></a>
+      <div class="rail-nav">
+        <a class="rail-item active" href="/" aria-label="编辑画册" title="编辑画册"><span>▱</span><small>编辑</small></a>
+        <a class="rail-item" href="/projects.html" aria-label="画册列表" title="画册列表"><span>◇</span><small>画册</small></a>
+      </div>
+      <button class="rail-profile" type="button" aria-label="账户">CU</button>
+    </nav>
+
+    <div class="editor-shell">
+      <header class="topbar">
+        <div class="project-id">
+          <div class="studio-brand"><img class="studio-logo" src="/studio-logo.png" alt="" width="32" height="32"><strong class="studio-word">BOOK STUDIO</strong></div>
+          <span class="brand-divider" aria-hidden="true"></span>
+          <div class="project-copy"><span class="crumb" id="projectCode">PROJECT / 001</span><div class="project-title"><input id="title" maxlength="120" aria-label="画册名称"><span class="live-dot">编辑中</span></div></div>
+        </div>
+        <div class="top-actions">
+          <span id="status">所有更改已保存</span>
+          <button class="button quiet" id="save" type="button">立即保存</button>
+          <button class="button primary" id="openExport" type="button">导出画册</button>
+          <button class="button outline" id="viewAlbum" type="button">预览成品 <span>↗</span></button>
+        </div>
+      </header>
+
+      <main class="workspace">
+        <aside class="settings panel">
+          <div class="panel-header">
+            <div><span class="index">01</span><h2>装帧设置</h2></div>
+            <p>只改变画册的物理呈现，不改动页面图片内容。</p>
+          </div>
+          <div class="settings-tabs" role="tablist" aria-label="装帧设置分类">
+            <button class="active" type="button" role="tab" aria-selected="true" data-settings-tab="format">规格</button>
+            <button type="button" role="tab" aria-selected="false" data-settings-tab="material">材质</button>
+            <button type="button" role="tab" aria-selected="false" data-settings-tab="motion">翻页</button>
+            <button type="button" role="tab" aria-selected="false" data-settings-tab="scene">场景</button>
+          </div>
+          <div class="control-group settings-view active" data-settings-panel="format">
+            <div class="group-label"><span>页面规格</span><small>FORMAT</small></div>
+            <label for="ratio">尺寸比例</label>
+            <select id="ratio"><option>16:9</option><option>4:3</option><option>16:10</option><option>2:3</option><option>1:1</option><option>2:1</option><option>1.618:1</option><option value="custom">自定义比例</option></select>
+            <div class="custom-ratio" id="customRatio" hidden><input id="customWidth" type="number" min="1" max="100" aria-label="自定义宽度"><span>:</span><input id="customHeight" type="number" min="1" max="100" aria-label="自定义高度"></div>
+            <div class="toggle orientation-toggle"><div><b>横版画册</b><small id="orientationHint">关闭时为竖版</small></div><input id="landscape" type="checkbox" role="switch" aria-label="切换横版画册"></div>
+            <label>页面内容</label>
+            <div class="segments"><button data-fit="contain" type="button">完整显示</button><button data-fit="cover" type="button">铺满页面</button></div>
+            <div class="range-head"><label for="margin">留白边距</label><output id="marginValue">0px</output></div>
+            <input id="margin" type="range" min="0" max="60">
+          </div>
+          <div class="control-group settings-view" data-settings-panel="material" hidden>
+            <div class="group-label"><span>纸张表面</span><button class="settings-reset" type="button" data-reset-settings="material">恢复默认</button></div>
+            <label for="material">纸张材质</label>
+            <select id="material"><option value="none">无质感 · 原图呈现</option><option value="matte">哑光艺术纸</option><option value="fine">细纹美术纸</option><option value="linen">亚麻纹纸</option></select>
+            <p class="effect-description" id="materialDescription">不叠加材质，保持原图。</p>
+            <label for="materialScope">材质应用范围</label>
+            <select id="materialScope"><option value="all">整本画册</option><option value="cover">仅封面与封底</option><option value="pages">仅内页</option></select>
+            <div class="range-head"><label for="texture">纹理强度</label><output id="textureValue">0%</output></div>
+            <input id="texture" type="range" min="0" max="24">
+            <div class="range-head"><label for="gloss">反光强度</label><output id="glossValue">45%</output></div>
+            <input id="gloss" type="range" min="0" max="100">
+            <div class="range-head"><label for="thickness">纸张厚度</label><output id="thicknessValue">3 / 5</output></div>
+            <input id="thickness" type="range" min="1" max="5">
+            <label for="edgeColor">页边颜色</label>
+            <select id="edgeColor"><option value="ivory">象牙白</option><option value="white">纯白</option><option value="gray">暖灰</option><option value="black">墨黑</option><option value="kraft">牛皮纸</option></select>
+            <div class="range-head"><label for="cornerRadius">书角圆润度</label><output id="cornerRadiusValue">3px</output></div>
+            <input id="cornerRadius" type="range" min="0" max="8">
+            <div class="range-head"><label for="contactShadow">接触阴影</label><output id="contactShadowValue">42%</output></div>
+            <input id="contactShadow" type="range" min="0" max="70">
+            <label for="coverFinish">封面表面</label>
+            <select id="coverFinish"><option value="none">无附加质感</option><option value="matte">哑光覆膜</option><option value="linen">布纹封面</option><option value="soft-touch">细腻触感膜</option></select>
+          </div>
+          <div class="control-group settings-view" data-settings-panel="motion" hidden>
+            <div class="group-label"><span>翻页反馈</span><button class="settings-reset" type="button" data-reset-settings="motion">恢复默认</button></div>
+            <div class="toggle"><div><b>翻页阴影</b><small>只作用于页面边缘</small></div><input id="shadow" type="checkbox" role="switch" aria-label="翻页阴影"></div>
+            <div class="range-head"><label for="flipSpeed">翻页速度</label><output id="flipSpeedValue">760ms</output></div>
+            <input id="flipSpeed" type="range" min="450" max="1200" step="10">
+            <div class="range-head"><label for="shadowOpacity">阴影强度</label><output id="shadowOpacityValue">42%</output></div>
+            <input id="shadowOpacity" type="range" min="10" max="60">
+            <label for="turnStyle">翻页手感</label>
+            <select id="turnStyle"><option value="natural">自然</option><option value="soft">柔和</option><option value="crisp">利落</option></select>
+            <div class="toggle"><div><b>开场封面动效</b><small>低性能设备会自动简化</small></div><input id="introMotion" type="checkbox" role="switch" aria-label="开场封面动效"></div>
+            <div class="toggle"><div><b>沉浸式客户展示</b><small>闲置后自动隐藏控制栏</small></div><input id="immersive" type="checkbox" role="switch" aria-label="沉浸式客户展示"></div>
+          </div>
+          <div class="control-group settings-view" data-settings-panel="scene" hidden>
+            <div class="group-label"><span>展示环境</span><button class="settings-reset" type="button" data-reset-settings="scene">恢复默认</button></div>
+            <label>影棚灯光</label>
+            <div class="light-presets segments" role="group" aria-label="影棚灯光">
+              <button type="button" data-lighting="none">关闭</button><button type="button" data-lighting="soft">柔光</button><button type="button" data-lighting="side">侧光</button><button type="button" data-lighting="gallery">展厅</button>
+            </div>
+            <div class="range-head"><label for="lightIntensity">灯光强度</label><output id="lightIntensityValue">50%</output></div>
+            <input id="lightIntensity" type="range" min="0" max="100">
+            <div class="range-head"><label for="lightDirection">光照方向微调</label><output id="lightDirectionValue">0°</output></div><input id="lightDirection" type="range" min="-90" max="90">
+            <div class="range-head"><label for="lightTemperature">色温</label><output id="lightTemperatureValue">5500 K</output></div><input id="lightTemperature" type="range" min="2700" max="7500" step="100">
+            <div class="range-head"><label for="shadowSoftness">阴影柔度</label><output id="shadowSoftnessValue">50%</output></div><input id="shadowSoftness" type="range" min="0" max="100">
+            <label for="scene">展示背景</label>
+            <select id="scene" class="visually-hidden"><option value="charcoal">炭黑影棚</option><option value="gallery">白色展厅</option><option value="burgundy">深红展台</option><option value="warm">暖灰桌面</option><option value="concrete">深灰墙面</option><option value="custom">自定义背景图</option></select>
+            <div class="scene-presets" role="group" aria-label="内置展示背景">
+              <button type="button" data-scene-select="charcoal"><i class="scene-chip charcoal"></i><span>炭黑影棚</span></button>
+              <button type="button" data-scene-select="gallery"><i class="scene-chip gallery"></i><span>白色展厅</span></button>
+              <button type="button" data-scene-select="burgundy"><i class="scene-chip burgundy"></i><span>深红展台</span></button>
+              <button type="button" data-scene-select="warm"><i class="scene-chip warm"></i><span>暖灰桌面</span></button>
+              <button type="button" data-scene-select="concrete"><i class="scene-chip concrete"></i><span>深灰墙面</span></button>
+            </div>
+            <input id="backgroundInput" type="file" accept="image/jpeg,image/png,image/webp" hidden>
+            <div class="custom-background"><button id="backgroundUpload" type="button"><i>＋</i><span><b>上传自定义背景</b><small>JPG / PNG / WEBP · 最大 25MB</small></span></button><button class="button quiet" id="backgroundRemove" type="button">移除</button></div>
+            <p class="background-status" id="backgroundStatus">当前使用内置背景</p>
+          </div>
+          <div class="principle"><span>NON-DESTRUCTIVE</span><p>材质与光照都是可关闭的屏幕效果，不覆盖原图。互动展示包保留效果；静态 PDF 默认输出干净原稿。</p></div>
+        </aside>
+
+        <section class="stage">
+          <div class="stage-background" aria-hidden="true"></div>
+          <div class="stage-head">
+            <div class="stage-heading">
+              <button class="stage-back" id="backToProjects" type="button" aria-label="返回画册列表" title="返回画册列表">←</button>
+              <div class="stage-copy"><span class="stage-kicker">LIVE BINDING PREVIEW</span><b id="summary"></b></div>
+            </div>
+            <div class="stage-tools">
+              <div class="editor-slider panel-transparency" role="group" aria-label="操作栏外观" title="调整两侧及上下操作栏，不改变画册或展示背景"><label for="panelTransparency">栏位透明度</label><input id="panelTransparency" type="range" min="0" max="80" step="1" value="45" aria-label="操作栏透明度"><output id="panelTransparencyValue" for="panelTransparency">45%</output><button id="panelTransparencyReset" type="button" title="恢复默认透明度" aria-label="恢复默认透明度">↺</button></div>
+              <div class="editor-slider background-brightness" role="group" aria-label="预览背景明暗" title="只调整后台预览背景，不改变书页、灯光配置或导出效果"><label for="backgroundBrightness">背景明暗</label><input id="backgroundBrightness" type="range" min="0" max="200" step="1" value="100" aria-label="预览背景明暗度"><output id="backgroundBrightnessValue" for="backgroundBrightness">100%</output><button id="backgroundBrightnessReset" type="button" title="恢复默认背景明暗" aria-label="恢复默认背景明暗">↺</button></div>
+              <span>100%</span><button class="icon-button dark" id="fullscreen" type="button" aria-label="全屏预览">⛶</button>
+            </div>
+          </div>
+          <div class="book-stage">
+            <div class="stage-grid" aria-hidden="true"></div>
+            <button class="round prev" id="prev" type="button" aria-label="上一组" title="上一组"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M19 12H5m6-6-6 6 6 6"/></svg></button>
+            <div class="book-wrap"><div class="book" id="book"></div><div class="book-edge" aria-hidden="true"></div></div>
+            <button class="round next" id="next" type="button" aria-label="下一组" title="下一组"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14m-6-6 6 6-6 6"/></svg></button>
+            <div class="preview-zoom-rail" aria-label="画册观看控制">
+              <button id="previewZoomOut" type="button" aria-label="缩小画册" title="缩小">−</button>
+              <input id="previewZoom" type="range" min="50" max="200" step="5" value="100" aria-label="画册缩放比例">
+              <output id="previewZoomValue" for="previewZoom">100%</output>
+              <button id="previewZoomIn" type="button" aria-label="放大画册" title="放大">＋</button>
+              <button id="previewZoomFit" type="button" aria-label="适应屏幕" title="适应屏幕">⌗</button>
+              <span class="zoom-divider" aria-hidden="true"></span>
+              <button class="preview-close-book" id="previewCloseBook" type="button" aria-label="合上画册" title="合上画册"><span aria-hidden="true">◫</span><small>合上</small></button>
+            </div>
+          </div>
+          <div class="pager"><span id="pagerText"></span><div id="dots"></div><small>使用左右方向键浏览</small></div>
+        </section>
+
+        <aside class="pages panel">
+          <div class="pages-top">
+            <div><span class="index">02</span><h2>页面顺序</h2></div>
+            <button class="icon-button primary" id="addTop" type="button" aria-label="添加照片">＋</button>
+          </div>
+          <div class="page-summary"><b id="pageCount"></b><span>拖动或使用箭头排序</span></div>
+          <input id="addInput" type="file" multiple accept="image/jpeg,image/png,image/webp,image/gif" hidden>
+          <input id="replaceInput" type="file" accept="image/jpeg,image/png,image/webp,image/gif" hidden>
+          <button class="upload" id="upload" type="button"><span>＋</span><b>添加完整页面</b><small>JPG / PNG / WEBP / GIF · 最大 25MB</small></button>
+          <div class="page-list" id="pageList"></div>
+          <div class="composition-tools">
+            <button class="button outline" id="editCrop" type="button">调整图片 / 裁剪构图</button>
+            <label class="replace-crop-option"><input id="keepCrop" type="checkbox">替换图片时保留本页构图</label>
+            <section id="cropPanel" hidden aria-label="本页图片构图">
+              <strong id="cropPageName"></strong><p>在书页上拖动图片，滚轮或滑块缩放。原图可随时恢复。</p>
+              <div class="segments"><button id="cropContain" type="button">完整显示</button><button id="cropCover" type="button">铺满页面</button></div>
+              <div class="range-head"><label for="cropZoom">图片大小</label><output id="cropZoomValue">100%</output></div>
+              <input id="cropZoom" type="range" min="25" max="400" step="1" value="100">
+              <div class="crop-options"><button id="cropCenter" type="button">居中</button><button id="cropUndo" type="button">撤销</button><button id="cropReset" type="button">恢复默认</button></div>
+              <div class="crop-commit"><button class="button outline" id="cropCancel" type="button">取消</button><button class="button primary" id="cropApply" type="button">应用并保存</button></div>
+              <p id="cropMessage" role="status"></p>
+            </section>
+          </div>
+          <div class="page-actions"><button class="button outline" id="replace" type="button">替换图片</button><button class="icon-button" id="up" type="button" aria-label="上移">↑</button><button class="icon-button" id="down" type="button" aria-label="下移">↓</button><button class="icon-button danger" id="delete" type="button" aria-label="删除">×</button></div>
+        </aside>
+      </main>
+    </div>
+  </div>
+  <dialog class="leave-dialog" id="leaveDialog">
+    <form class="leave-card" method="dialog">
+      <div class="leave-head"><span>RETURN TO LIBRARY</span><button id="leaveClose" type="button" aria-label="关闭">×</button></div>
+      <div class="leave-content">
+        <i aria-hidden="true">←</i>
+        <div><h2>返回画册列表</h2><p id="leaveMessage">返回前是否保存当前画册？</p></div>
+      </div>
+      <div class="leave-save-note"><span aria-hidden="true"></span><p><b>自动保存已开启</b><small>选择保存并返回，将在离开前完成最后一次确认。</small></p></div>
+      <div class="leave-actions">
+        <button class="leave-discard" id="leaveDiscard" type="button">不保存并返回</button>
+        <div><button class="leave-cancel" id="leaveCancel" type="button">取消</button><button class="leave-confirm" id="leaveSave" type="button">保存并返回</button></div>
+      </div>
+    </form>
+  </dialog>
+  <dialog class="leave-dialog delete-dialog" id="deletePageDialog">
+    <form class="leave-card" method="dialog">
+      <div class="leave-head"><span>REMOVE PAGE</span><button id="deletePageClose" type="button" aria-label="关闭">×</button></div>
+      <div class="leave-content">
+        <i aria-hidden="true">×</i>
+        <div><h2>删除这个页面</h2><p id="deletePageMessage">删除后页面会从画册中移除，原图文件会在保存成功后安全清理。</p></div>
+      </div>
+      <div class="leave-actions delete-actions">
+        <button class="leave-cancel" id="deletePageCancel" type="button">取消</button>
+        <button class="leave-confirm" id="deletePageConfirm" type="button">确认删除</button>
+      </div>
+    </form>
+  </dialog>
+  <div class="page-context-menu" id="pageContextMenu" role="menu" aria-label="页面操作" hidden>
+    <p class="page-menu-title" id="pageMenuTitle"></p>
+    <button type="button" role="menuitem" data-page-action="crop"><span>▧</span>调整图片／裁剪</button>
+    <button type="button" role="menuitem" data-page-action="replace"><span>↺</span>替换图片</button>
+    <button type="button" role="menuitem" data-page-action="copy"><span>▣</span>复制此页</button>
+    <div class="page-menu-divider" role="separator"></div>
+    <button type="button" role="menuitem" data-page-action="up"><span>↑</span>上移</button>
+    <button type="button" role="menuitem" data-page-action="down"><span>↓</span>下移</button>
+    <div class="page-menu-divider" role="separator"></div>
+    <button class="danger" type="button" role="menuitem" data-page-action="delete"><span>×</span>删除此页</button>
+    <p class="page-menu-hint" id="pageMenuHint" hidden>封面／封底固定，复制后为普通内页。</p>
+  </div>
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  <dialog class="export-dialog" id="exportDialog">
+    <div class="export-card">
+      <div class="share-head"><div><span>EXPORT ALBUM</span><h2>导出画册</h2><p>导出前会保存当前画册。图片位置与本地展示一致。</p></div><button id="closeExport" type="button" aria-label="关闭导出">×</button></div>
+      <label for="exportFormat">交付类型</label><select id="exportFormat"><option value="offline">完整展示包 · 推荐</option><option value="pdf">PDF · 阅读 / 打印</option></select>
+      <div id="pdfOptions"><label for="exportLayout">PDF 排版</label><select id="exportLayout"><option value="single">单页 · 每面独立</option><option value="spread">跨页 · 封面封底独立，内页成对</option></select><label for="exportQuality">图片质量</label><select id="exportQuality"><option value="high">高清 · 原图精度，文件较大</option><option value="compact">轻量 · 适合微信发送</option></select></div>
+      <p class="export-note" id="exportNote">PDF 保留图片、裁剪和边距；翻页、灯光与动态阴影仅在互动版中呈现。</p>
+      <progress id="exportProgress" hidden aria-label="导出进度"></progress><p id="exportMessage" role="status" aria-live="polite"></p>
+      <a id="exportDownload" class="button outline" hidden>再次下载文件</a>
+      <button class="button primary" id="exportStart" type="button">生成并下载</button>
+    </div>
+  </dialog>
+  <script src="/album/composition.js?v=20261008-1"></script>
+  <link rel="stylesheet" href="/device-preview.css?v=20261009-live-2">
+  <script src="/device-preview.js?v=20261009-live-2"></script>
+  <script src="/album-change-state.js?v=20261009-return"></script>
+  <link rel="stylesheet" href="/album/presentation.css?v=20261009-effects-1">
+  <script src="/album/presentation.js?v=20261009-effects-1"></script>
+  <script src="/studio-history.js"></script>
+  <link rel="stylesheet" href="/editor-chrome.css"><script src="/editor-chrome.js"></script>
+  <script src="/app.js?v=20261009-effects-1"></script>
+  <script src="/editing-export.js?v=20261009-delivery-1"></script>
+  <link rel="stylesheet" href="/project-recovery.css">
+  <script src="/project-recovery.js"></script>
+<link rel="stylesheet" href="/workflow-simplify.css"><script src="/workflow-simplify.js"></script></body>
+</html>

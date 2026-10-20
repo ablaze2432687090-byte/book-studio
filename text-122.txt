@@ -1,0 +1,160 @@
+<!doctype html>
+<html lang="zh-CN">
+<head><script src="/i18n-catalog.js"></script><script src="/studio-i18n.js"></script><link rel="stylesheet" href="/studio-i18n.css"><script src="/overlay-dismiss.js"></script>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>BOOK STUDIO · 项目中心</title>
+  <meta name="description" content="统一管理画册、展厅等独立项目与公共素材">
+  <link rel="stylesheet" href="/projects.css?v=20261009-effects-1">
+  <link rel="stylesheet" href="/studio-navigation.css">
+  <link rel="stylesheet" href="/album/presentation.css?v=20261009-effects-1">
+  <link rel="stylesheet" href="/studio-shell.css"><script defer src="/studio-shell.js"></script>
+</head>
+<body>
+  <header class="project-topbar">
+    <a class="brand" href="/projects.html"><img class="studio-logo" src="/studio-logo.png" alt="" width="32" height="32"><span>BOOK STUDIO</span></a>
+    <div class="section-title"><small>PROJECTS</small><strong>项目中心</strong></div>
+    <div class="top-actions">
+      <span id="globalStatus">所有项目已保存</span>
+      <button class="primary" id="createAlbum" type="button">＋ 新建项目</button>
+    </div>
+  </header>
+  <main class="project-shell">
+    <aside class="project-sidebar">
+      <div class="sidebar-group-title">项目类型</div>
+      <nav aria-label="项目类型" id="projectTypeNavigation">
+        <button class="active" type="button" data-project-type="book" aria-current="page"><span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 4h16v16H4zM8 4v16M11 8h6m-6 4h6"/></svg>画册</span><small id="bookProjectCount">—</small></button>
+        <button type="button" data-project-type="gallery"><span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 4h18v16H3zM7 8h4v8H7zm8 0h2v8h-2"/></svg>展厅</span><small id="galleryProjectCount">—</small></button>
+      </nav>
+      <div class="sidebar-resources"><div class="sidebar-group-title">资源与工具</div><a href="/library.html" class="sidebar-resource"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 4h16v16H4zM4 10h16M10 4v16"/></svg><span>素材图库</span><svg class="resource-external" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7M7 7h10v10"/></svg></a><button id="openAIJobs" type="button" class="sidebar-resource"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6h11M9 12h11M9 18h11M4 6h.01M4 12h.01M4 18h.01"/></svg><span>生成任务</span></button><div class="sidebar-note"><span>LOCAL STUDIO</span><p>统一项目入口，按类型独立保存。图库是公共素材工具，不属于某种项目。</p></div></div>
+    </aside>
+    <section class="project-content">
+      <div class="project-heading">
+        <div><span id="projectTypeKicker">BOOK COLLECTION</span><h1 id="projectListHeading">所有画册</h1></div>
+        <div class="project-tools">
+          <label class="search"><span>⌕</span><input id="search" type="search" placeholder="搜索画册名称"></label>
+          <div class="view-toggle" aria-label="视图方式">
+            <button class="active" id="gridView" type="button" aria-label="卡片视图">▦</button>
+            <button id="listView" type="button" aria-label="列表视图">☷</button>
+          </div>
+        </div>
+      </div>
+      <div class="project-empty" id="emptyState" hidden>
+        <span>EMPTY COLLECTION</span>
+        <h2>还没有符合条件的画册</h2>
+        <button class="primary" type="button" data-create>新建画册</button>
+        <p>画册适合翻页阅读；展厅适合横向策展。也可以先在素材图库整理图片。</p><div class="onboarding-actions"><a class="button" href="/gallery.html?new=1">新建展厅</a><a class="button" href="/library.html">整理素材</a></div>
+      </div>
+      <div class="album-grid" id="albumGrid"></div>
+      <section id="galleryProjectSection" hidden aria-label="展厅项目列表"><div id="galleryProjectGrid" class="hub-gallery-grid"></div><div class="project-empty" id="galleryProjectsEmpty" hidden><span>EXHIBITION COLLECTION</span><h2>还没有展厅项目</h2><p>创建横向展厅，添加作品后展墙会自动延长。</p><a class="primary hub-create-link" href="/gallery.html?new=1">新建展厅</a></div><p id="galleryProjectsError" hidden role="alert"></p></section>
+    </section>
+  </main>
+  <dialog id="projectTypeDialog"><div class="dialog-card project-type-card"><div class="dialog-heading"><div><span>NEW PROJECT</span><h2>选择项目类型</h2><p>项目类型决定展示方式；各类项目分别保存。</p></div><button type="button" class="close-dialog" id="closeProjectType" aria-label="关闭">×</button></div><div class="project-type-options"><button type="button" data-new-project="book"><span>▤</span><strong>画册</strong><small>装帧、跨页与翻页展示</small></button><button type="button" data-new-project="gallery"><span>▧</span><strong>展厅</strong><small>自动延长的横向策展展墙</small></button></div></div></dialog>
+  <dialog id="createDialog">
+    <form method="dialog" class="dialog-card create-card" id="createForm">
+      <div class="dialog-heading"><div><span>NEW PROJECT</span><h2>新建画册</h2><p>三种方式任选。正常新建和复制指令无需配置 API。</p></div><button type="button" class="close-dialog" data-close="createDialog" aria-label="关闭新建窗口">×</button></div>
+      <div class="creation-modes" role="group" aria-label="创建方式">
+        <button type="button" data-mode="normal" aria-pressed="true"><strong>正常新建</strong><small>自己导入完整页面</small></button>
+        <button type="button" data-mode="api" aria-pressed="false"><strong>AI 接口生成</strong><small>可选 · 需要 API 与额度</small></button>
+        <button type="button" data-mode="prompt" aria-pressed="false"><strong>复制生成指令</strong><small>配合图片发给任意 AI</small></button>
+      </div>
+      <label>画册名称<input id="newTitle" maxlength="120" value="未命名画册" required></label>
+      <div id="aiBrief" hidden class="ai-section">
+        <section class="create-section">
+        <h3 class="create-section-title"><span>01</span>页面规格</h3>
+        <div class="brief-grid two">
+          <label>单面比例<select id="briefRatio"><option>16:9</option><option selected>4:3</option><option>16:10</option><option>2:3</option><option>1:1</option><option>2:1</option><option>1.618:1</option><option>4:5</option><option value="a-series">A 系列比例 · A4 / A5</option><option value="letter">Letter 纸张比例</option><option value="custom">自定义像素尺寸</option></select></label>
+          <label>画册方向<select id="briefOrientation"><option value="portrait">竖版</option><option value="landscape">横版</option></select></label>
+          <label id="briefResolutionField">图片精细度<select id="briefResolution"><option value="1600">轻量 · 长边 1600 px</option><option value="2400" selected>标准 · 长边 2400 px</option><option value="3200">高清 · 长边 3200 px</option><option value="4096">精细 · 长边 4096 px</option><option value="6400">大尺寸 · 长边 6400 px</option></select></label>
+          <label>总面数（含封面封底）<select id="briefCount"></select></label>
+        </div>
+        <div id="briefCustomSize" hidden class="brief-grid two">
+          <label>自定义单面宽度 / px<input id="briefWidth" type="number" min="256" max="8000" value="1800"></label>
+          <label>自定义单面高度 / px<input id="briefHeight" type="number" min="256" max="8000" value="2400"></label>
+        </div>
+        <p id="briefSizeSummary" class="ai-info" role="status"></p>
+        </section>
+        <section class="create-section">
+        <h3 class="create-section-title"><span>02</span>视觉方向</h3>
+        <div class="brief-grid two">
+          <label>素材处理<select id="briefTreatment"><option value="preserve">保留完整作品</option><option value="crop">允许裁剪与排版</option><option value="redesign">允许拆分重新设计</option></select></label>
+          <label>主题 / 用途<select id="briefTheme"></select><input id="briefThemeCustom" class="preset-custom" hidden maxlength="3000" placeholder="填写自己的主题或用途"><small id="briefThemeHint" class="preset-hint"></small></label>
+        </div>
+        <div class="brief-grid two">
+          <label>画面风格<select id="briefStyle"></select><input id="briefStyleCustom" class="preset-custom" hidden maxlength="3000" placeholder="填写自己的画面风格"><small id="briefStyleHint" class="preset-hint"></small></label>
+          <label>统一配色<select id="briefPalette"></select><input id="briefPaletteCustom" class="preset-custom" hidden maxlength="3000" placeholder="填写颜色或色号"><small id="briefPaletteHint" class="preset-hint"></small></label>
+          <label>背景要求<select id="briefBackground"></select><input id="briefBackgroundCustom" class="preset-custom" hidden maxlength="3000" placeholder="填写自己的背景要求"><small id="briefBackgroundHint" class="preset-hint"></small></label>
+          <label>字体倾向<select id="briefType"></select><input id="briefTypeCustom" class="preset-custom" hidden maxlength="3000" placeholder="填写字体或排字要求"><small id="briefTypeHint" class="preset-hint"></small></label>
+        </div>
+        </section>
+        <details class="create-more"><summary>更多要求<span>文字 · 内容保护 · 交付格式</span></summary>
+          <div class="ai-section">
+            <div class="brief-grid two">
+              <label>文字语言<select id="briefLanguage"></select><input id="briefLanguageCustom" class="preset-custom" hidden maxlength="100" placeholder="填写语言要求"><small id="briefLanguageHint" class="preset-hint"></small></label>
+              <label>指令排版形式<select id="briefLayout"><option value="single">独立单面</option><option value="spread">跨页设计，交付时拆成单面</option></select></label>
+            </div>
+            <label>文字内容<select id="briefCopy"></select><textarea id="briefCopyCustom" class="preset-custom" hidden rows="3" maxlength="3000" placeholder="填写需要出现的准确文案"></textarea><small id="briefCopyHint" class="preset-hint"></small></label>
+            <div class="brief-grid two">
+              <fieldset class="brief-checks"><legend>必须保留（可多选）</legend><div id="preserveChoices"></div><label class="checkbox-label"><input type="checkbox" id="preserveCustomToggle">补充自定义要求</label><textarea id="briefPreserveCustom" hidden rows="2" maxlength="1500" placeholder="其他必须保留的内容"></textarea></fieldset>
+              <fieldset class="brief-checks"><legend>避免出现（可多选）</legend><div id="avoidChoices"></div><label class="checkbox-label"><input type="checkbox" id="avoidCustomToggle">补充自定义要求</label><textarea id="briefAvoidCustom" hidden rows="2" maxlength="1500" placeholder="其他需要避免的内容"></textarea></fieldset>
+            </div>
+            <div class="brief-grid two">
+              <label>排版节奏 / 其他要求<select id="briefNotes"></select><textarea id="briefNotesCustom" class="preset-custom" hidden rows="2" maxlength="3000" placeholder="填写其他排版要求"></textarea><small id="briefNotesHint" class="preset-hint"></small></label>
+              <label>交付要求<select id="briefOutput"></select><input id="briefOutputCustom" class="preset-custom" hidden maxlength="100" placeholder="填写自定义交付要求"><small id="briefOutputHint" class="preset-hint"></small></label>
+            </div>
+          </div>
+        </details>
+        <section id="apiReferences" hidden class="ai-section">
+          <div class="ai-info" id="apiSummary">正在读取接口设置…</div>
+          <label>上传参考图（可选，最多 16 张）<input id="referenceFiles" type="file" accept="image/jpeg,image/png,image/webp" multiple></label>
+          <p>图片仅上传到本机；点击开始生成后才发送至所配置服务商。原图不会被覆盖。AI 可能改写文字或细节；如需完全保留已有成品，请使用正常新建。</p>
+          <div id="referenceList" class="reference-list"></div>
+          <p id="referenceStatus" role="status"></p>
+          <p class="ai-info">每面发起一次图片请求，发生错误即暂停，不自动重试。API 实际尺寸以设置为准；与目标比例不同时可在编辑器中裁剪。AI 文字和排版需要人工检查。</p>
+          <button type="button" class="quiet" id="settingsFromCreate">设置 / 更换接口</button>
+        </section>
+        <section class="ai-section create-prompt">
+          <h3 class="create-section-title"><span>03</span>生成指令</h3>
+          <div class="inline-actions"><button type="button" class="quiet" id="refreshPrompt">按表单生成指令</button><button type="button" class="quiet" id="copyPrompt">复制指令</button><button type="button" class="quiet" id="downloadPrompt">下载 TXT</button></div>
+          <label>生成指令（可直接修改）<textarea id="aiPrompt" rows="8" maxlength="28000" placeholder="点击“按表单生成指令”；调整表单后需要重新生成"></textarea></label>
+          <p id="promptHelp">复制后，把这段文字与全部图片一起发送给 AI。此功能不会自动上传图片或调用 API，也不会自动新建画册。</p>
+        </section>
+      </div>
+      <p id="createMessage" role="status" class="ai-info" hidden></p>
+      <div class="dialog-actions"><button value="cancel" class="quiet" formnovalidate>关闭</button><button value="default" class="primary" id="confirmCreate">创建并打开</button></div>
+    </form>
+  </dialog>
+  <dialog id="aiJobsDialog" aria-labelledby="jobsTitle">
+    <div class="dialog-card jobs-card">
+      <div class="dialog-heading"><div><span>LOCAL GENERATION TASKS</span><h2 id="jobsTitle">生成任务</h2></div><button type="button" class="close-dialog" data-close="aiJobsDialog" aria-label="关闭任务">×</button></div>
+      <p>关闭窗口不会取消任务；电脑关机或后台退出会中断。已完成图片保留，重启后可手动继续，不会自动重复付费。</p>
+      <label>最近 30 个任务<select id="jobSelect"><option value="">还没有任务</option></select></label>
+      <div id="jobStatus" role="status" class="ai-info">选择任务查看进度与结果。</div>
+      <div class="inline-actions"><button type="button" class="quiet" id="refreshJobs">刷新任务</button><button type="button" class="quiet" id="cancelAIJob" hidden>停止后续生成</button><button type="button" class="quiet" id="retryAIJob" hidden>继续未完成页面（可能收费）</button></div>
+      <div id="jobResults" class="job-results"></div>
+      <p id="jobMessage" role="status"></p>
+      <div class="dialog-actions"><span id="selectedResults">请选择满意的页面</span><button type="button" class="primary" id="importAIResults" disabled>导入为新画册</button></div>
+    </div>
+  </dialog>
+  <dialog id="deleteDialog">
+    <form method="dialog" class="dialog-card delete-project-card">
+      <div><span>RECYCLE BIN</span><h2>移入回收站？</h2><p id="deleteProjectMessage">可以随时恢复，原图和已导出的文件不会被删除。</p></div>
+      <div class="dialog-actions"><button value="cancel" class="quiet" id="cancelDelete">取消</button><button type="button" class="primary" id="confirmDelete">移入回收站</button></div>
+    </form>
+  </dialog>
+  <div class="toast" id="toast" role="status"></div>
+  <link rel="stylesheet" href="/device-preview.css?v=20261009-live-2">
+  <script src="/device-preview.js?v=20261009-live-2"></script>
+  <script src="/album/composition.js?v=20261009-config-library"></script>
+  <script src="/album/presentation.js?v=20261009-effects-1"></script>
+  <script src="/gallery-design.js"></script>
+  <script src="/collection-ui.js"></script>
+  <script src="/projects.js?v=20261009-effects-1"></script>
+  <script src="/studio-navigation.js"></script>
+  <script src="/project-hub.js"></script>
+  <script src="/ai-brief-presets.js?v=20261008-presets"></script>
+  <script src="/ai-projects.js?v=20261008-presets"></script>
+  <link rel="stylesheet" href="/project-recovery.css">
+  <script src="/project-recovery.js"></script>
+<link rel="stylesheet" href="/workflow-simplify.css"><script src="/workflow-simplify.js"></script></body>
+</html>

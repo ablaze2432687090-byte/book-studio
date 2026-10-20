@@ -1,0 +1,18 @@
+/* English is allowed to wrap; never squeeze labels by shrinking the whole UI. */
+html[lang=en] button,html[lang=en] .button,html[lang=en] summary{letter-spacing:normal;line-height:1.4}
+html[lang=en] .studio-settings-nav button{white-space:normal;text-align:left;min-height:40px}
+html[lang=en] .studio-setting-row{align-items:center;gap:20px}
+html[lang=en] .studio-setting-row>div:first-child{flex:1;min-width:0}
+html[lang=en] .studio-setting-row select{width:180px;max-width:45%}
+html[lang=en] .studio-settings-actions,html[lang=en] .gallery-actions,html[lang=en] .top-actions{flex-wrap:wrap}
+html[lang=en] .studio-settings-actions button,html[lang=en] .gallery-actions button{height:auto;min-height:36px;white-space:normal}
+html[lang=en] .sidebar-resource,html[lang=en] .project-sidebar nav button{line-height:1.5}
+html[lang=en] .creation-modes button{height:auto;min-height:82px}
+html[lang=en] .creation-modes strong,html[lang=en] .creation-modes small{white-space:normal}
+html[lang=en] .gallery-settings label,html[lang=en] .panel label{line-height:1.5;overflow-wrap:break-word}
+html[lang=en] .range-heading{gap:12px;align-items:center}
+html[lang=en] .range-heading label{min-width:0;flex:1}
+html[lang=en] .album-actions a,html[lang=en] .album-actions button{white-space:normal;min-height:38px;height:auto}
+html[lang=en] .studio-settings-footer{align-items:center;gap:16px}
+html[lang=en] .studio-settings-footer>span{min-width:0;overflow-wrap:break-word}
+@media(max-width:680px){html[lang=en] .studio-settings-nav{flex-wrap:wrap}html[lang=en] .studio-settings-nav button{flex:1 1 125px}html[lang=en] .studio-setting-row{flex-wrap:wrap}html[lang=en] .studio-setting-row select{max-width:100%;width:100%}html[lang=en] .creation-modes{grid-template-columns:1fr}}
