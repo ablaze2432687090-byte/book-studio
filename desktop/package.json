@@ -1,7 +1,7 @@
 {
   "name":"book-studio-desktop",
   "productName":"BOOK STUDIO",
-  "version":"0.3.1",
+  "version":"0.6.0",
   "description":"BOOK STUDIO — 画册、展厅与作品交付工作台",
   "author":"BOOK STUDIO",
   "private":true,

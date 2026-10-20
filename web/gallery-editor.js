@@ -9,6 +9,21 @@
  const wall=new GalleryWall($('#galleryViewport'),{select:id=>{selected=id;render(true);},position:({index,count,progress})=>{$('#galleryPosition').textContent=`${count?index+1:0} / ${count}`;$('#galleryProgress').value=progress*1000;$('#galleryPrevious').disabled=index<=0;$('#galleryNext').disabled=index>=count-1;}});
  GalleryTools.attach(wall);GalleryPresentation.attach(wall);
  StudioEditorChrome.attachGallery(wall);
+ // Editor-only docking. Move the actual controls, never copies; guide/view
+ // dialogs stay in their original toolbar so timer and option queries survive.
+ const previewHead=$('.gallery-stage-head'),previewStage=$('.gallery-stage'),viewTools=$('.gallery-view-tools');
+ previewHead.classList.add('gallery-compact-head');
+ const previewHint=previewHead.querySelector(':scope > span');
+ if(previewHint){previewHead.querySelector('h1').title=previewHint.textContent;previewHint.remove();}
+ const headerView=document.createElement('div');headerView.className='gallery-header-view';
+ headerView.append(viewTools.querySelector('.gallery-zoom'),viewTools.querySelector('[data-view-settings]'));
+ previewHead.insertBefore(headerView,previewHead.querySelector('.panel-transparency'));
+ const introControl=viewTools.querySelector('[data-exhibition-intro]');
+ // Remaining direct buttons are overview / play / guide / introduction.
+ for(const node of [viewTools.querySelector('[data-overview]'),viewTools.querySelector('[data-play]'),viewTools.querySelector('[data-guide-settings]'),introControl,viewTools.querySelector('input[type=search]'),viewTools.querySelector('[data-section]')])if(node)viewTools.append(node);
+ viewTools.querySelector('input[type=search]').style.width='100%';
+ function dockViewTools(){const full=document.fullscreenElement===previewStage;viewTools.classList.toggle('gallery-side-tools',!full);if(full)previewHead.after(viewTools);else $('.gallery-assets > .section-heading').after(viewTools);}
+ document.addEventListener('fullscreenchange',dockViewTools);dockViewTools();
  const editHistory=StudioHistory.bind($('.gallery-actions'),{disabled:()=>busy||!!saving||!!document.querySelector('dialog[open]'),error:error=>toast(error.message),restore:value=>{const revision=gallery.revision,updatedAt=gallery.updatedAt;gallery={...value,revision,updatedAt};if(!gallery.artworks.some(item=>item.id===selected))selected=gallery.artworks[0]?.id||null;change();render();}});
  const authoring=GalleryAuthoring.attach({get:()=>gallery,selected:()=>selected,busy:()=>busy,replaceBatch,mutate:fn=>{if(!gallery||busy)return;fn(gallery);change();render();}});
  wall.callbacks.move=(id,dx,dy)=>authoring.move(id,dx,dy);

@@ -1,5 +1,7 @@
 {
   "owner": "ablaze2432687090-byte",
   "repo": "book-studio",
-  "channel": "preview"
+  "channel": "preview",
+  "stage": "beta",
+  "stableReleaseApproved": false
 }

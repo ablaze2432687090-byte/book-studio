@@ -34,3 +34,11 @@ test('public release modules and version are included in the desktop build',asyn
  const root=JSON.parse(await readFile(new URL('../package.json',import.meta.url))),desktop=JSON.parse(await readFile(new URL('./package.json',import.meta.url))),build=JSON.parse(await readFile(new URL('./electron-builder.json',import.meta.url)));
  assert.equal(root.version,desktop.version);for(const file of ['release-tools.cjs','storage-paths.cjs','release.json'])assert(build.files.includes(file));
 });
+
+test('stable promotion requires explicit owner approval',async()=>{
+ const {assertReleasePolicy}=require('./release-tools.cjs'),policy=JSON.parse(await readFile(new URL('./release.json',import.meta.url))),pkg=JSON.parse(await readFile(new URL('../package.json',import.meta.url)));
+ assertReleasePolicy(policy,pkg.version);assert.equal(policy.stage,'beta');assert.equal(policy.channel,'preview');assert.equal(policy.stableReleaseApproved,false);
+ for(const version of ['1.0.0','1.1.0','2.0.0'])assert.throws(()=>assertReleasePolicy(policy,version));
+ assert.throws(()=>assertReleasePolicy({...policy,channel:'stable'},'0.6.0'));
+ assert.doesNotThrow(()=>assertReleasePolicy({...policy,stableReleaseApproved:true,stage:'stable',channel:'stable'},'1.0.0'));
+});

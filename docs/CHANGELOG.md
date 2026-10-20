@@ -1,5 +1,14 @@
 # Changelog / 更新记录
 
+## 0.6.0 Beta - 2026-10-21
+
+- Public test release; not 1.0 stable. Explicit author approval is required before stable promotion.
+- Compact gallery preview header and grouped sidebar viewing tools; fullscreen keeps the original controls available. 中英文紧凑工具栏与全屏控件回位。
+- Continuous gallery illumination: sum linear light before exposure, smooth neighbouring pools and remove artwork-sized light cutoffs. 展厅统一连续光场与自然交叉衰减。
+- Eleven book lighting modes share bounded cached light fields; facing pages sample the same field. No visible book fixtures or changes to page-turn code. 画册只保留光影，不出现灯具。
+- Preserve the cover/spread navigation layout fix, glass controls, isolated project collections, offline export and data protection. 保留画册切换修复、半透明操作栏及数据隔离。
+- Updated Windows x64 installer, bilingual docs, SHA256 and redacted release verification. Unsigned beta; independent clean-machine acceptance remains pending.
+
 ## 0.3.1 - final local release preparation / 发布前收尾
 
 - Bundle an OFL-licensed Chinese/Latin PDF font with provenance and embedded subsets; no Windows language pack or Microsoft font is required for gallery/catalog or generated book text.

@@ -1121,6 +1121,7 @@ PDF 字体资源缺失，请重新安装完整客户端|The PDF font resource is
 不能迁移链接文件|Linked files cannot be migrated.
 主动检查官方版本，更新由你手动安装。|Check official versions on request and install updates manually.
 当前为未签名公开预览版。独立干净电脑验收尚待完成；升级前请先备份作品。|Unsigned public preview. Independent clean-machine acceptance is pending. Back up your projects before updating.
+当前为未签名测试版，并非 1.0 正式版。独立干净电脑验收尚待完成；升级前请先备份作品。|Unsigned beta, not a 1.0 stable release. Independent clean-machine acceptance is pending. Back up your projects before updating.
 `.trim().split('\n').map(line=>line.split('|'));
  const en=Object.freeze(Object.fromEntries(entries));
  root.BookStudioEnglish=en;

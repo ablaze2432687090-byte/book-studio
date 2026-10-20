@@ -4,11 +4,11 @@
 
 A local-first Windows studio for page-turn books, expanding horizontal galleries, and shared image assets. Switch between Simplified Chinese and English in Settings. Your artwork and project text are never translated.
 
-**0.3.1 public preview.** Unsigned, manual updates only. Independent clean-machine acceptance is still pending. BOOK STUDIO and Skill Canvas are separate projects with separate installations and project stores.
+**0.6 Beta (0.6.0), not a 1.0 stable release.** All subsequent releases remain beta/GitHub Pre-releases until the author explicitly approves “1.0 stable.” Unsigned, manual updates only. Independent clean-machine acceptance is still pending. BOOK STUDIO and Skill Canvas are separate projects with separate installations and project stores.
 
 ## Download and update
 
-Open [Releases](https://github.com/ablaze2432687090-byte/book-studio/releases) and download **BOOK-STUDIO-0.3.1-Setup.exe** for Windows 10/11 x64. The installer supports English and Simplified Chinese. GitHub's Source code ZIP is not an installer.
+Open [0.6 Beta downloads](https://github.com/ablaze2432687090-byte/book-studio/releases/tag/v0.6.0) and download **BOOK-STUDIO-0.6.0-Setup.exe** for Windows 10/11 x64. The installer supports English and Simplified Chinese. GitHub's Source code ZIP is not an installer.
 
 A matching `.sha256` file and redacted verification summary accompany the installer. This preview is unsigned and Windows may show an unknown publisher warning. Verify the source and SHA256 before deciding to run it; do not disable security software.
 

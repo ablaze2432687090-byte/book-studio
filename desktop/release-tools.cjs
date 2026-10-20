@@ -11,6 +11,7 @@ function links(config={}) {
 }
 function parts(version){return /^v?(\d{1,6})\.(\d{1,6})\.(\d{1,6})$/.exec(version||'')?.slice(1).map(Number);}
 function compare(a,b){const aa=parts(a),bb=parts(b);if(!aa||!bb)return 0;for(let i=0;i<3;i++)if(aa[i]!==bb[i])return aa[i]-bb[i];return 0;}
+function assertReleasePolicy(config,version){const parsed=parts(version);if(!parsed)throw Error('Invalid application version');if(config.stableReleaseApproved!==true&&(parsed[0]>=1||config.channel!=='preview'||config.stage!=='beta'))throw Error('Stable/1.0 release requires explicit owner approval; keep beta and preview until then');}
 async function checkUpdates(config,version,fetcher=fetch){
   if(!links(config))return {status:'unconfigured',currentVersion:version};
   try{
@@ -27,4 +28,4 @@ async function checkUpdates(config,version,fetcher=fetch){
     return {status:compare(release.tag_name,version)>0?'available':'current',currentVersion:version,version:release.tag_name.replace(/^v/,''),notes:typeof release.body==='string'?release.body.slice(0,12000):''};
   }catch{return {status:'error',currentVersion:version};}
 }
-module.exports={diagnostics,links,checkUpdates,compare};
+module.exports={diagnostics,links,checkUpdates,compare,assertReleasePolicy};

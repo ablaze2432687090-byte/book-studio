@@ -35,6 +35,15 @@
 .bs-environment[data-bs-light=cool],.bs-environment[data-bs-light=gallery] { --bs-env-light:linear-gradient(rgb(var(--bs-light-rgb)/.12),transparent 50%),radial-gradient(ellipse at var(--bs-light-x,50%) 20%,rgb(var(--bs-light-rgb)/.25),transparent 65%); }
 .bs-environment[data-bs-light=spot] { --bs-env-light:radial-gradient(ellipse 35% 62% at var(--bs-light-x,50%) 30%,rgb(var(--bs-light-rgb)/.36),transparent 72%); }
 .bs-environment[data-bs-light=rim] { --bs-env-light:radial-gradient(ellipse at 10% 60%,rgb(var(--bs-light-rgb)/.18),transparent 45%),radial-gradient(ellipse at 90% 25%,rgb(var(--bs-light-rgb)/.2),transparent 45%); }
+/* One continuous exposed field, never a fixture or a book-level overlay.
+   Surface copies are page-bound; adjacent leaves sample opposite halves. */
+.bs-environment.bs-continuous-light:not(.bs-thumbnail)::before{background-image:var(--bs-env-field)!important;background-size:100% 100%!important;background-repeat:no-repeat!important;opacity:1!important;mix-blend-mode:screen}
+.bs-continuous-light .bs-surface > .bs-light{background-image:var(--bs-env-field);background-size:100% 100%;background-repeat:no-repeat;opacity:.16;mix-blend-mode:screen}
+.bs-continuous-light .spread-book .sheet > .bs-light,.bs-continuous-light .book-page.--left > .bs-light,.bs-continuous-light .book-page.--right > .bs-light{background-size:200% 100%}
+.bs-continuous-light .spread-book .sheet:first-child > .bs-light,.bs-continuous-light .book-page.--left > .bs-light{background-position:left top}
+.bs-continuous-light .spread-book .sheet:last-child > .bs-light,.bs-continuous-light .book-page.--right > .bs-light{background-position:right top}
+.bs-continuous-light .bs-surface[data-bs-cover=true] > .bs-light{background-size:100% 100%;background-position:center}
+.bs-continuous-light[data-bs-light=none] .bs-light{display:none}
 .bs-environment .book.bs-effects:not(.no-shadow) { filter:drop-shadow(var(--bs-shadow-x,0px) 28px var(--bs-shadow-blur,30px) rgb(0 0 0/var(--contact-shadow,.42))); }
 .bs-environment.bs-light-scene { color:#252527; }
 .bs-environment.bs-light-scene .stage-head,.bs-environment.bs-light-scene .pager { border-color:#a6a6aa; }

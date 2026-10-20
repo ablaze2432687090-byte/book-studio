@@ -4,7 +4,7 @@
  class Wall extends Base {
   constructor(root,callbacks={}){super(root,callbacks);this.nodes=new Map();
    for(const type of ['pointerdown','wheel'])root.addEventListener(type,()=>{this.focusedIndex=undefined;this.focusedScroll=undefined;},{capture:true,passive:true});
-   root.addEventListener('scroll',()=>{if(this.items.length>120)this.renderVisible();},{passive:true});
+   root.addEventListener('scroll',()=>{if(this.items.length>120)this.renderVisible();this.scheduleLight();},{passive:true});
    let dragging;
    root.addEventListener('pointerdown',event=>{const id=event.target.closest('[data-art]')?.dataset.art;if(!root.classList.contains('layout-editing')||!id||event.button!==0)return;event.preventDefault();event.stopImmediatePropagation();dragging={id,pointer:event.pointerId,x:event.clientX,y:event.clientY};root.setPointerCapture(event.pointerId);},true);
    root.addEventListener('pointermove',event=>{if(!dragging||event.pointerId!==dragging.pointer)return;const slot=this.nodes.get(dragging.id);if(slot)slot.style.transform=`translate(${event.clientX-dragging.x}px,${event.clientY-dragging.y}px)`;},true);
@@ -16,6 +16,7 @@
    for(const [key,value]of Object.entries({wall:config.wall,frame:config.frame,floor:config.floor||'legacy',lighting:config.lighting||'spot',align:config.align||'center'}))this.root.dataset[key]=value;
    this.root.classList.toggle('no-captions',!config.captions);
    const values={'--spot-opacity':config.light/100,'--floor-shine':(config.floorShine??20)/100,'--wall-grain':(config.wallTexture??30)/100,'--ambient':(config.ambient??100)/100,'--ambient-dim':Math.max(0,1-(config.ambient??100)/100)*.8,'--ambient-glow':Math.max(0,(config.ambient??100)/100-1)*.4,'--light-rgb':GalleryDesign.temperature(config.lightTemperature??5500),'--light-angle':((config.lightDirection||0)*.4)+'%','--light-degree':config.lightDirection||0,'--light-spread':(config.lightSpread??65)+'%'};
+   Object.assign(values,GalleryDesign.lightProfile(config));
    for(const [key,value]of Object.entries(values))this.root.style.setProperty(key,value);
    if(!this.track){this.track=document.createElement('div');this.track.className='gallery-track';this.root.replaceChildren(this.track);}
    this.layout();if(anchor&&this.items.some(item=>item.id===anchor))this.focus(anchor);this.callbacks.collection?.(this.items);
@@ -37,7 +38,20 @@
    }
    for(const section of this.layoutData.sections){if(section.x<left-300||section.x>right)continue;const marker=document.createElement('aside');marker.className='gallery-section-marker';marker.style.left=section.x+'px';const title=document.createElement('b'),description=document.createElement('p');title.textContent=section.title;description.textContent=section.description;marker.append(title,description);children.push(marker);}
    if(!this.items.length){const empty=document.createElement('div');empty.className='wall-empty';empty.innerHTML='<span>YOUR EXHIBITION STARTS HERE</span><h2>让每一件作品，拥有自己的位置。</h2><p>添加作品后，展墙会自动延长。<br>保留原图比例，支持多种排布。</p>';children.push(empty);}
-   this.track.replaceChildren(...children);
+   this.track.replaceChildren(...children);this.scheduleLight();
+  }
+  scheduleLight(){if(this.lightFrame)return;this.lightFrame=requestAnimationFrame(()=>{this.lightFrame=0;if(this.root.isConnected)this.paintLight();});}
+  paintLight(){if(!this.config||!this.positions)return;const root=this.root,w=root.clientWidth,h=root.clientHeight;if(!w||!h)return;
+   if(!this.lightCanvas){this.lightCanvas=document.createElement('canvas');this.lightCanvas.className='gallery-light-field';this.lightCanvas.setAttribute('aria-hidden','true');root.prepend(this.lightCanvas);root.classList.add('has-light-field');}
+   const canvas=this.lightCanvas,scale=Math.min(.25,480/w,270/h),width=Math.max(1,Math.ceil(w*scale)),height=Math.max(1,Math.ceil(h*scale));canvas.width=width;canvas.height=height;canvas.style.height=h+'px';canvas.style.marginBottom=-h+'px';
+   const context=canvas.getContext('2d',{alpha:false});if(!context)return;
+   const all=GalleryDesign.lightSources(this.positions,this.config,h),left=root.scrollLeft,sources=all.filter(s=>s.x+s.rx*8>=left&&s.x-s.rx*8<=left+w),rgb=GalleryDesign.lightProfile(this.config)['--light-rgb'].split(' ').map(Number),linear=rgb.map(v=>{v/=255;return v<=.04045?v/12.92:Math.pow((v+.055)/1.055,2.4);}),pixels=context.createImageData(width,height),data=pixels.data;
+   const energyField=new Float32Array(width*height);
+   for(const s of sources){for(let y=Math.max(0,Math.floor((s.y-s.ry*8)*scale));y<Math.min(height,Math.ceil((s.y+s.ry*8)*scale));y++){const py=(y+.5)/scale,dy=(py-s.y)/s.ry,cx=s.x+(py-s.y)*s.tilt,core=Math.exp(-.5*dy*dy),bounce=s.bounce*Math.exp(-.125*dy*dy),start=Math.max(0,Math.floor((cx-s.rx*8-left)*scale)),end=Math.min(width,Math.ceil((cx+s.rx*8-left)*scale));for(let x=start;x<end;x++){const dx=(left+(x+.5)/scale-cx)/s.rx;energyField[y*width+x]+=s.power*(core*Math.exp(-.5*dx*dx)+bounce*Math.exp(-.125*dx*dx));}}}
+   if(this.lightLutKey!==rgb.join(' ')){this.lightLutKey=rgb.join(' ');this.lightLut=linear.map(channel=>Uint8Array.from({length:8193},(_,i)=>Math.round(GalleryDesign.expose(i/2048*channel)*255)));}
+   for(let p=0;p<energyField.length;p++){const exposure=Math.min(8192,Math.round(energyField[p]*2048)),i=p*4;for(let c=0;c<3;c++)data[i+c]=this.lightLut[c][exposure];data[i+3]=255;}
+   context.putImageData(pixels,0,0);
+   for(const p of this.positions){const node=this.nodes.get(p.id);if(!node)continue;const x=Math.max(0,Math.min(width-1,(p.x+p.w/2-left)*scale)),y=Math.max(0,Math.min(height-1,(p.y+p.h*.2)*scale)),x0=Math.floor(x),y0=Math.floor(y),x1=Math.min(width-1,x0+1),y1=Math.min(height-1,y0+1),fx=x-x0,fy=y-y0,energy=(energyField[y0*width+x0]*(1-fx)+energyField[y0*width+x1]*fx)*(1-fy)+(energyField[y1*width+x0]*(1-fx)+energyField[y1*width+x1]*fx)*fy;node.style.setProperty('--light-surface',Math.min(.075,(1-Math.exp(-energy*2))*.13));}
   }
   viewBounds(){const inset=this.viewInsets||{left:0,right:0,top:0,bottom:0};return {...inset,width:Math.max(80,this.root.clientWidth-inset.left-inset.right),height:Math.max(80,this.root.clientHeight-inset.top-inset.bottom)};}
   layout(){if(!this.config||!this.track)return;const v=this.viewBounds();this.root.classList.toggle('is-compact',v.height<360);this.root.dataset.arrangement=this.config.arrangement||'single';this.root.style.setProperty('--viewport-height',this.root.clientHeight+'px');this.layoutData=GalleryLayout.calculate(this.items,this.config,v.width,v.height,this.zoom);this.layoutData.positions.forEach(p=>{p.x+=v.left;p.y+=v.top;});this.layoutData.sections.forEach(s=>s.x+=v.left);this.layoutData.width+=v.left+v.right;this.positions=this.layoutData.positions;this.track.style.cssText=`display:block;position:relative;padding:0;width:${this.layoutData.width}px;height:100%;min-width:100%`;this.renderVisible();this.notify();}

@@ -2,6 +2,12 @@
 
 Preparation does not create repositories, push commits, make tags or upload releases.
 
+## Current release policy / 当前版本规则
+
+The current release is **0.6 Beta (0.6.0)**, not 1.0 stable. All subsequent releases must remain GitHub **Pre-releases** on the `preview` channel until the human owner explicitly confirms “1.0 正式版”. Do not infer approval from a successful test run or a generic request to update GitHub. Keep `stage: beta` and `stableReleaseApproved: false` in `desktop/release.json`; change this approval only following that explicit confirmation. Build checks reject stable/1.x packaging without it.
+
+当前为 **0.6 测试版（0.6.0）**。作者明确确认“1.0 正式版”之前，后续版本全部保持测试版／GitHub Pre-release。测试通过、要求上传或更新均不等于正式版批准。
+
 ## Before publication / 上传前
 
 1. Run `pnpm release:check` from the development checkout using the documented build environment. Only a fully passed report identifies the actual latest installer, synthetic QA profile and clean public-source snapshot. Do not select an older snapshot by filename alone.

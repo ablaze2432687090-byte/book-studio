@@ -4,11 +4,11 @@
 
 本地优先的 Windows 作品创作与展示工作台：翻页画册、横向展厅和公共素材图库。中文与 English 界面可在设置中切换，作品内容保持原样。
 
-当前为 **0.3.1 公开预览版**。未签名，手动下载安装更新；尚未完成独立干净电脑验收。这是与 Skill Canvas 完全独立的项目，不共用作品仓库或安装目录。
+当前为 **0.6 测试版（0.6.0 Beta）**，不是 1.0 正式版。在作者明确确认“1.0 正式版”之前，后续发布均保持测试版／GitHub Pre-release 状态。未签名，手动下载安装更新；尚未完成独立干净电脑验收。这是与 Skill Canvas 完全独立的项目，不共用作品仓库或安装目录。
 
 ## 下载安装
 
-前往 [版本下载页](https://github.com/ablaze2432687090-byte/book-studio/releases) 下载 **BOOK-STUDIO-0.3.1-Setup.exe**，不要把页面上的 Source code ZIP 当作安装包。适用 Windows 10/11 x64；安装器支持中文和 English。
+前往 [0.6 测试版下载页](https://github.com/ablaze2432687090-byte/book-studio/releases/tag/v0.6.0) 下载 **BOOK-STUDIO-0.6.0-Setup.exe**，不要把页面上的 Source code ZIP 当作安装包。适用 Windows 10/11 x64；安装器支持中文和 English。
 
 同时提供 `.sha256` 校验文件和脱敏验收摘要。安装包尚未签名，Windows 可能显示未知发布者；不要关闭安全软件。请核对来源与 SHA256 后自行决定是否运行。
 

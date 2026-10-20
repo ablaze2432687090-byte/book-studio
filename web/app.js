@@ -3,7 +3,6 @@ BookPresentation.setupControls();
 const ratioPairs = { '16:9': [16, 9], '4:3': [4, 3], '16:10': [16, 10], '2:3': [2, 3], '1:1': [1, 1], '2:1': [2, 1], '1.618:1': [1.618, 1] };
 const presentationDefaults = { landscape: false, material: 'none', texture: 0, thickness: 3, edgeColor: 'ivory', cornerRadius: 3, contactShadow: 42, coverFinish: 'none', flipSpeed: 760, shadowOpacity: 42, turnStyle: 'natural', immersive: true, introMotion: true, scene: 'charcoal', lighting: 'soft', lightIntensity: 50, customWidth: 3, customHeight: 4, backgroundImage: '' };
 const edgeColors = { ivory: '#ebe5d9', white: '#f7f7f4', gray: '#a5a39f', black: '#29292b', kraft: '#b89568' };
-const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
 const settingsDefaults = {
   material: { material: 'none', texture: 0, thickness: 3, edgeColor: 'ivory', cornerRadius: 3, contactShadow: 42, coverFinish: 'none', materialScope:'all', gloss:45 },
   motion: { shadow: true, flipSpeed: 760, shadowOpacity: 42, turnStyle: 'natural', immersive: true, introMotion: true },
@@ -120,25 +119,18 @@ function fitPreviewCamera() {
   previewZoom = 1; previewPanX = 0; previewPanY = 0; syncPreviewCamera(true);
 }
 
-async function closePreviewBook() {
+function closePreviewBook() {
   if (previewClosing) return;
-  const book = $('#book');
   previewClosing = true;
-  $('.preview-zoom-rail').classList.add('is-locked');
-  book.classList.remove('editor-fade-in');
-  book.classList.add('editor-fade-out');
-  await new Promise((resolve) => setTimeout(resolve, reducedMotion ? 0 : 220));
-  spread = 0;
-  selectedId = album.pages[0]?.id;
-  fitPreviewCamera();
-  render();
-  const renderedBook = $('#book');
-  renderedBook.classList.add('editor-fade-in');
-  await new Promise((resolve) => setTimeout(resolve, reducedMotion ? 0 : 280));
-  renderedBook.classList.remove('editor-fade-in');
-  previewClosing = false;
-  $('.preview-zoom-rail').classList.remove('is-locked');
-  syncPreviewCamera();
+  try {
+    spread = 0;
+    selectedId = album.pages[0]?.id;
+    fitPreviewCamera();
+    render({ navigation: true });
+  } finally {
+    previewClosing = false;
+    syncPreviewCamera();
+  }
 }
 
 function previewGroups(pages) {
@@ -192,7 +184,7 @@ function renderProjectIdentity() {
   if (album?.id) $('#projectCode').textContent = `PROJECT / ${album.id.slice(0, 6).toUpperCase()}`;
 }
 
-function render() {
+function render({ navigation = false } = {}) {
   editHistory.notify();
   closePageMenu();
   delete album.aging;delete album.agingStyle;
@@ -291,7 +283,11 @@ function render() {
   $('#pagerText').textContent = `${visibleNumbers.join('–')} / ${pages.length}`;
   $('#dots').innerHTML = groups.map((_, index) => `<i class="${index === spread ? 'active' : ''}"></i>`).join('');
 
-  $('#pageList').innerHTML = pages.map((page, index) => {
+  if (navigation) {
+    // Navigation never changes page records. Preserve thumbnails, focus and
+    // scroll position instead of destroying and recreating the entire sidebar.
+    $('#pageList').querySelectorAll('.page-item').forEach(item => item.classList.toggle('selected', item.dataset.id === selectedId));
+  } else $('#pageList').innerHTML = pages.map((page, index) => {
     const fixedCover = index === 0 || index === pages.length - 1;
     const role = index === 0 ? '硬页 · 封面' : index === pages.length - 1 ? '硬页 · 封底' : '普通内页';
     return `<div class="page-item ${page.id === selectedId ? 'selected' : ''} ${fixedCover ? 'fixed-cover' : ''}" role="group" aria-label="第 ${index+1} 页：${escapeHtml(page.name)}" draggable="${!fixedCover}" data-id="${escapeHtml(page.id)}" data-index="${index}"><button class="page-select" type="button" aria-label="查看第 ${index+1} 页：${escapeHtml(page.name)}"><span class="handle">${fixedCover ? '◆' : '⠿'}</span><span class="thumb" style="background:${page.color || '#d2d0ca'}">${page.src ? `<img src="${page.src}" alt="" draggable="false">` : '▤'}<i>${index + 1}</i></span><span class="meta"><b>${escapeHtml(page.name)}</b><small>${role}</small></span></button><button class="page-more" type="button" draggable="false" aria-label="第 ${index+1} 页操作" aria-haspopup="menu" aria-expanded="false" aria-controls="pageContextMenu">⋯</button></div>`;
@@ -549,8 +545,8 @@ async function init() {
     Object.assign(album, settingsDefaults[button.dataset.resetSettings]);
     setDirty(); render(); toast('已恢复默认设置');
   }));
-  $('#prev').onclick = () => { if (previewClosing) return; spread = Math.max(0, spread - 1); selectedId = album.pages[previewGroups(album.pages)[spread]?.indices[0]]?.id; render(); };
-  $('#next').onclick = () => { if (previewClosing) return; spread = Math.min(previewGroups(album.pages).length - 1, spread + 1); selectedId = album.pages[previewGroups(album.pages)[spread]?.indices[0]]?.id; render(); };
+  $('#prev').onclick = () => { if (previewClosing) return; spread = Math.max(0, spread - 1); selectedId = album.pages[previewGroups(album.pages)[spread]?.indices[0]]?.id; render({ navigation: true }); };
+  $('#next').onclick = () => { if (previewClosing) return; spread = Math.min(previewGroups(album.pages).length - 1, spread + 1); selectedId = album.pages[previewGroups(album.pages)[spread]?.indices[0]]?.id; render({ navigation: true }); };
   $('#save').onclick = () => save({ notify: true });
   $('#viewAlbum').onclick = async () => {
     if (!await flushSave()) return;

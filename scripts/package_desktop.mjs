@@ -9,6 +9,8 @@ import {audit} from './audit_public.mjs';
 const root=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'..');
 const toolchain=process.env.BOOK_STUDIO_TOOLCHAIN?path.resolve(process.env.BOOK_STUDIO_TOOLCHAIN):root;
 const require=createRequire(path.join(toolchain,'package.json'));
+const policyRequire=createRequire(import.meta.url);
+policyRequire('../desktop/release-tools.cjs').assertReleasePolicy(JSON.parse(await readFile(path.join(root,'desktop/release.json'),'utf8')),JSON.parse(await readFile(path.join(root,'package.json'),'utf8')).version);
 const {build}=require('electron-builder');
 const electronDist=path.dirname(require('electron'));
 const electronVersion=require('electron/package.json').version;
