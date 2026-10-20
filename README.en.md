@@ -4,7 +4,7 @@
 
 A local-first Windows studio for page-turn books, expanding horizontal galleries, and shared image assets. Switch between Simplified Chinese and English in Settings. Your artwork and project text are never translated.
 
-**0.6 Beta (0.6.0), not a 1.0 stable release.** All subsequent releases remain beta/GitHub Pre-releases until the author explicitly approves “1.0 stable.” Unsigned, manual updates only. Independent clean-machine acceptance is still pending. BOOK STUDIO and Skill Canvas are separate projects with separate installations and project stores.
+**0.6 Beta · Windows 10/11 x64 · Chinese / English**
 
 ## Download and update
 
@@ -16,7 +16,7 @@ For later versions, use Settings → About & updates → Check for updates, or r
 
 ## Use
 
-Run the installer or the complete portable folder. End users do not need Node, Python, a browser, or a coding assistant. Data lives separately in `%APPDATA%/BookStudio` and is retained by default during updates and uninstall. No author projects are shipped. See the [user guide](docs/USER_GUIDE.en.md).
+Run the installer or the complete portable folder. End users do not need Node, Python, a browser, or a coding assistant. Data lives separately in `%APPDATA%/BookStudio` and is retained by default during updates and uninstall. First launch starts with an empty project list. See the [user guide](docs/USER_GUIDE.en.md).
 
 Books and galleries have separate collections and a shared asset library. Deliver PDFs or complete offline ZIP packages. Recipients must extract the entire ZIP. There is no publishing, live synchronization, or QR service. AI is optional: images are sent to your chosen provider only after an explicit generation request. Provider charges may apply. Backups exclude API keys.
 
@@ -34,9 +34,9 @@ pnpm start
 
 Use an isolated `BOOK_STUDIO_HOME` when developing. See [development](docs/DEVELOPMENT.md) for testing and packaging.
 
-## Export public source — no upload
+## Export source
 
-Run `pnpm source:export`. A fresh `work/public-release/source-VERSION-RANDOM/source` folder contains only approved source, assets, and docs. Git history, projects, keys, logs, exports, old website templates, and dependencies are excluded. Its adjacent audit report records file hashes. Initialize a new public repository only after audit, asset-rights review, and explicit publication authorization. The original repository remains untouched.
+Run `pnpm source:export` to create an allowlisted source folder under `work/public-release/source-VERSION-RANDOM/source`. User data, keys, logs, dependencies and Git history are excluded. The adjacent audit report records file hashes and scan results. See [publishing](docs/PUBLISHING.md).
 
 ## License
 

@@ -1,28 +1,26 @@
-# GitHub publishing handoff / GitHub 发布交接
+# Publishing / 发布指南
 
-Preparation does not create repositories, push commits, make tags or upload releases.
+## Release configuration / 版本配置
 
-## Current release policy / 当前版本规则
+Configure the application version and release channel in `desktop/release.json`. Beta builds use the `preview` channel and GitHub Pre-release status. The official repository is [ablaze2432687090-byte/book-studio](https://github.com/ablaze2432687090-byte/book-studio).
 
-The current release is **0.6 Beta (0.6.0)**, not 1.0 stable. All subsequent releases must remain GitHub **Pre-releases** on the `preview` channel until the human owner explicitly confirms “1.0 正式版”. Do not infer approval from a successful test run or a generic request to update GitHub. Keep `stage: beta` and `stableReleaseApproved: false` in `desktop/release.json`; change this approval only following that explicit confirmation. Build checks reject stable/1.x packaging without it.
+应用版本与发布通道由 `desktop/release.json` 配置。测试版使用 `preview` 通道，并在 GitHub 标为 Pre-release。
 
-当前为 **0.6 测试版（0.6.0）**。作者明确确认“1.0 正式版”之前，后续版本全部保持测试版／GitHub Pre-release。测试通过、要求上传或更新均不等于正式版批准。
+## Build and verify / 构建与检查
 
-## Before publication / 上传前
+1. Run `pnpm release:check` using the environment described in [Development](DEVELOPMENT.md). Use the installer and clean source snapshot identified in its report.
+2. Test installation, first launch, upgrade, uninstall and retained data on a separate Windows x64 machine, in both installer languages.
+3. Review brand, artwork and texture distribution rights; preserve third-party notices. MIT does not license user artwork or brand marks.
+4. Publish source only from the audited `work/public-release/.../source` snapshot. Exclude user data, credentials, logs, backups and internal QA files. Never publish the development repository's private history.
 
-1. Run `pnpm release:check` from the development checkout using the documented build environment. Only a fully passed report identifies the actual latest installer, synthetic QA profile and clean public-source snapshot. Do not select an older snapshot by filename alone.
-2. Independently test install, English/Chinese installation, fresh launch, upgrade, uninstall and retained projects on another Windows x64 machine. Local isolated profiles are not a substitute. Keep preview status while this is pending.
-3. Confirm brand/artwork/texture distribution rights. The code's MIT license does not license customer artwork or brand marks. Keep third-party notices. This preview is unsigned: disclose it, ship the matching SHA256 and do not ask users to disable security software.
-4. Use only the reported `work/public-release/.../source` as a NEW repository root. It contains no `.git` or prior history. NEVER push the original development Git history. `.gitignore` does not remove already tracked private files.
+## Release assets / 发布文件
 
-## Bind official links when a real repository exists / 建仓后绑定
+Attach the versioned Windows x64 installer and matching `.sha256` file. Include concise Chinese/English notes covering features, installation requirements and known limitations. Clearly disclose unsigned installers; do not ask users to disable security software. GitHub's Source code ZIP is not an installer.
 
-Edit `desktop/release.json`: set `owner` and `repo` to the actual authorized GitHub owner/repository; set `channel` to `preview` to include GitHub prereleases or `stable` to exclude them. Only plain GitHub identifiers are accepted. Do not invent URLs before a repository exists. Update package metadata and both README download/feedback links to match that actual repository. Enable GitHub private vulnerability reporting and update SECURITY.md. Rebuild and rerun the gate after this configuration changes.
+发布内容包括 Windows x64 安装包、对应 SHA256 校验文件，以及中英文功能与安装说明。未签名安装包应明确标注；源码 ZIP 不代替安装包。
 
-The app queries only the configured official GitHub releases endpoint, only after a user clicks Check for updates. It never downloads or executes an installer. Release notes are displayed as plain text. No updater, management controls or credentials enter customer offline ZIPs.
+## Update behavior / 更新方式
 
-## Release contents / 发布内容
+The app checks the configured GitHub releases endpoint only when the user selects Check for updates. Updates are downloaded and installed manually. Release notes are displayed as plain text; customer offline packages contain no updater or management controls.
 
-Upload the installer and matching `.sha256` as Release assets, with bilingual version notes, Windows x64 support, unsigned-preview warning and known limitations. The source ZIP is source code, not an installer. Internal QA profiles, customer exports, logs, backups, audit working folders and private data do not belong in the public repository or Release.
-
-The official repository is `ablaze2432687090-byte/book-studio`, independent of Skill Canvas. `desktop/release.json` is bound to that repository and the preview channel. Future releases must keep the same identifiers and use a strictly increasing `vX.Y.Z` tag, attach the versioned installer plus SHA256, and clearly retain preview status until independent Windows acceptance and signing requirements are addressed. Check the previous installer and new installer against retained data on a separate machine before promoting to stable. This application-version check does not restore project publishing or synchronization.
+应用只在用户点击「检查更新」时查询版本，安装包由用户手动下载和安装。离线展示包不包含更新器或管理入口。

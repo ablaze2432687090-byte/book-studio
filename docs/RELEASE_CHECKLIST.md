@@ -1,6 +1,6 @@
 # Release checklist / 发布检查
 
-No upload is performed by any preparation command. Keep 0.x preview status until independent acceptance.
+Beta releases use the preview channel and GitHub Pre-release status.
 
 - [ ] Storage tests, UI tests, and source/privacy audit pass against exported source.
 - [ ] Chinese and English: projects, creation modes, book editor, gallery, assets, settings, dialogs, native menus, startup, and installer.
@@ -14,6 +14,5 @@ No upload is performed by any preparation command. Keep 0.x preview status until
 - [ ] Fresh Windows machine: install, first run, upgrade, uninstall, data retention, both installer languages. **Pending until independently performed.**
 - [ ] Manual review of brand rights, textures, vendor licenses and third-party notices; MIT does not license user artwork.
 - [ ] Public vulnerability reporting channel and repository URL added only once actually established.
-- [ ] Explicit human permission before creating/pushing a GitHub repository or publishing Releases.
 
 Unsigned installer warnings are expected in this preview. There is no automatic update feed. A failed or skipped check must stay visible in the release report, never be rewritten as success.

@@ -2,7 +2,6 @@
 
 ## 0.6.0 Beta - 2026-10-21
 
-- Public test release; not 1.0 stable. Explicit author approval is required before stable promotion.
 - Compact gallery preview header and grouped sidebar viewing tools; fullscreen keeps the original controls available. 中英文紧凑工具栏与全屏控件回位。
 - Continuous gallery illumination: sum linear light before exposure, smooth neighbouring pools and remove artwork-sized light cutoffs. 展厅统一连续光场与自然交叉衰减。
 - Eleven book lighting modes share bounded cached light fields; facing pages sample the same field. No visible book fixtures or changes to page-turn code. 画册只保留光影，不出现灯具。
@@ -26,8 +25,6 @@
 - 中英文主界面、创建预设与说明、设备预览、恢复点、设置和观看控件；英文版离线交付说明、使用指南与目录。
 - Synthetic geometric fixtures replace private-artwork dependencies. Fixed book guides use actual 3:4-spread viewer screenshots with neutral generated artwork.
 - 全新安装从空项目仓库开始，旧仓库迁移规则保留。默认自动保存后退出，用户可选择开启退出确认。
-- Independent Node/Python toolchains and locked dependencies; no dependency on Skill Canvas or a personal runtime path in public scripts.
+- Dedicated Node/Python toolchains and locked dependencies; public scripts use portable runtime paths.
 - 源码白名单导出、文件哈希、资源目录检查、压缩后端代码路径检查、独立版本构建目录、安装包 SHA256。
 - Bilingual usage/development/security/release documentation. Original code uses MIT; third-party licenses and artwork rights remain separate.
-
-This preview is unsigned and manually updated. Independent fresh-Windows installation/upgrade/uninstall acceptance and final branding/license review remain required before public release. Preparation does not publish anything to GitHub.

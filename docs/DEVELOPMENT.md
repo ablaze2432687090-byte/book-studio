@@ -1,6 +1,6 @@
 # Development / 开发
 
-See the root README for prerequisites and environment setup. The Python server and vanilla web UI are the product; no React/Vinext or external Skill Canvas checkout is required. Use a dedicated virtual environment, not a system-wide package overwrite.
+See the root README for prerequisites and environment setup. The app uses a Python backend and a vanilla HTML/CSS/JavaScript interface. Use a dedicated virtual environment, not a system-wide package overwrite.
 
 ## Complete local release gate / 完整发布检查
 
