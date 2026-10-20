@@ -1,0 +1,38 @@
+{
+  "name": "book-studio",
+  "version": "0.3.1",
+  "private": true,
+  "description": "Local-first book and gallery presentation studio",
+  "type": "module",
+  "license": "MIT",
+  "homepage": "https://github.com/ablaze2432687090-byte/book-studio#readme",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ablaze2432687090-byte/book-studio.git"
+  },
+  "bugs": {
+    "url": "https://github.com/ablaze2432687090-byte/book-studio/issues"
+  },
+  "engines": {
+    "node": ">=22.13.0"
+  },
+  "packageManager": "pnpm@11.19.0",
+  "scripts": {
+    "start": "electron desktop",
+    "test": "node scripts/test_public_source.mjs",
+    "test:contracts": "node --test web/album-change-state.test.mjs web/composition.test.mjs web/editor-controls.test.mjs",
+    "test:ui": "node scripts/check_bilingual.mjs",
+    "test:python": "node scripts/run_python_tests.mjs",
+    "test:desktop-unit": "node --test desktop/release-tools.test.mjs",
+    "release:audit": "node scripts/audit_dependencies.mjs",
+    "release:check": "node scripts/release_check.mjs",
+    "source:export": "node scripts/export_public_source.mjs",
+    "desktop:backend": "node scripts/build_desktop_backend.mjs",
+    "desktop:package": "node scripts/package_desktop.mjs"
+  },
+  "devDependencies": {
+    "electron": "44.5.1",
+    "electron-builder": "26.15.3",
+    "playwright": "1.58.2"
+  }
+}

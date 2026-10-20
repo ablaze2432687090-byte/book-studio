@@ -1,0 +1,14 @@
+/* Shared collection states. Storage remains owned by each project/asset adapter. */
+(() => {
+ const states=[['active','正常'],['archived','已归档'],['trash','回收站']];
+ function filters({label,onChange,attribute='collectionFilter'}){const nav=document.createElement('nav');nav.className='project-collection-filters';nav.setAttribute('aria-label',label);let active='active';for(const [key,text]of states){const b=document.createElement('button');b.type='button';b.dataset[attribute]=key;b.textContent=text;b.onclick=()=>{active=key;sync();onChange(key);};nav.append(b);}function sync(){for(const b of nav.children)b.setAttribute('aria-pressed',String(b.dataset[attribute]===active));}sync();return {node:nav,set:key=>{active=key;sync();},get:()=>active};}
+ const note=key=>key==='trash'?'移入回收站不会删除原图；恢复后回到移除前的正常或归档状态，不会自动清空。':key==='archived'?'归档仅收起项目或素材，不影响已导出的文件；取消归档即可回到正常列表。':'';
+ function galleryPreview(root,config={}){
+  const D=globalThis.GalleryDesign,wall=D.walls[config.wall]||D.walls.charcoal;
+  root.dataset.wall=config.wall||'charcoal';root.dataset.floor=config.floor||'legacy';root.dataset.lighting=config.lighting||'spot';
+  root.style.setProperty('--card-wall',wall[1]);root.style.setProperty('--card-light',D.temperature(config.lightTemperature??5500));root.style.setProperty('--card-light-power',config.lighting==='none'?0:(config.light??65)/100);root.style.setProperty('--card-light-x',(50+(config.lightDirection||0)*.65)+'%');root.style.setProperty('--card-dim',Math.max(0,1-(config.ambient??100)/100)*.8);root.style.setProperty('--card-glow',Math.max(0,(config.ambient??100)/100-1)*.4);root.style.setProperty('--card-floor-shine',(config.floorShine??20)/500);root.style.setProperty('--card-grain',(config.wallTexture??30)/100);root.style.setProperty('--card-light-size',(config.lightSpread??65)+'%');
+  const arts=(config.artworks||[]).slice(0,3);for(const artwork of arts){const frame=document.createElement('div');frame.className='hub-wall-art';const selected=artwork.frame&&artwork.frame!=='inherit'?artwork.frame:config.frame||'black';frame.dataset.frame=selected;frame.dataset.mat=config.mat||'none';frame.style.setProperty('--card-frame-width',((artwork.frameWidth||config.frameWidth||8)*.28)+'px');frame.style.setProperty('--card-mat-width',((artwork.matWidth||config.matWidth||18)*.25)+'px');frame.style.setProperty('--card-depth',((config.frameDepth??6)*.4)+'px');frame.style.setProperty('--card-glass',(config.glass||0)/100);frame.style.setProperty('--card-scale',Math.max(.5,Math.min(1.25,(artwork.scale||100)/100)));const image=document.createElement('img');image.src=artwork.src;image.alt='';image.loading='lazy';image.decoding='async';frame.append(image);root.append(frame);}
+  root.classList.add('configured-wall');return arts.length;
+ }
+ globalThis.CollectionUI={filters,note,galleryPreview};
+})();

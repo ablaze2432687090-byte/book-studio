@@ -1,0 +1,54 @@
+{
+  "licenseSource": "https://docs.ambientcg.com/license/",
+  "assets": [
+    {
+      "name": "dark-wood",
+      "assetId": "Wood051",
+      "source": "https://ambientcg.com/a/Wood051",
+      "download": "https://ambientcg.com/get?file=Wood051_1K-JPG.zip",
+      "license": "CC0-1.0"
+    },
+    {
+      "name": "light-wood",
+      "assetId": "WoodFloor051",
+      "source": "https://ambientcg.com/a/WoodFloor051",
+      "download": "https://ambientcg.com/get?file=WoodFloor051_1K-JPG.zip",
+      "license": "CC0-1.0"
+    },
+    {
+      "name": "marble",
+      "assetId": "Marble008",
+      "source": "https://ambientcg.com/a/Marble008",
+      "download": "https://ambientcg.com/get?file=Marble008_1K-JPG.zip",
+      "license": "CC0-1.0"
+    },
+    {
+      "name": "dark-marble",
+      "assetId": "Marble012",
+      "source": "https://ambientcg.com/a/Marble012",
+      "download": "https://ambientcg.com/get?file=Marble012_1K-JPG.zip",
+      "license": "CC0-1.0"
+    },
+    {
+      "name": "leather",
+      "assetId": "Leather030",
+      "source": "https://ambientcg.com/a/Leather030",
+      "download": "https://ambientcg.com/get?file=Leather030_1K-JPG.zip",
+      "license": "CC0-1.0"
+    },
+    {
+      "name": "paper",
+      "assetId": "Paper001",
+      "source": "https://ambientcg.com/a/Paper001",
+      "download": "https://ambientcg.com/get?file=Paper001_1K-JPG.zip",
+      "license": "CC0-1.0"
+    },
+    {
+      "name": "fabric",
+      "assetId": "Fabric030",
+      "source": "https://ambientcg.com/a/Fabric030",
+      "download": "https://ambientcg.com/get?file=Fabric030_1K-JPG.zip",
+      "license": "CC0-1.0"
+    }
+  ]
+}

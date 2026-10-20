@@ -1,0 +1,5 @@
+# Build-time dependency security pins (pnpm 11 configuration).
+overrides:
+  undici@7.29.0: 7.29.1
+  fast-uri@3.1.7: 3.1.8
+  brace-expansion@5.0.9: 5.0.12

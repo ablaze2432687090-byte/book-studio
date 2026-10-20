@@ -1,0 +1,15 @@
+/* Shared book baseline: tint alpha only; never fade text or filter the scene. */
+.editor-slider{display:flex;align-items:center;gap:7px;font-size:10px;color:#b2b2b9;white-space:nowrap}.editor-slider input[type=range]{width:72px;min-width:45px;height:4px;margin:0;accent-color:#cf003b}.editor-slider output{width:29px;text-align:right;font-variant-numeric:tabular-nums;color:#d2d2d7}.editor-slider button{width:22px;height:24px;min-height:24px;padding:0;border:0;background:transparent;color:#b2b2b9;font-size:13px}.editor-slider button:hover{background:#ffffff14}.editor-slider button:disabled{opacity:.3}.gallery-stage-head>.panel-transparency{margin-left:auto}.gallery-stage-head>.panel-transparency label{margin:0}.gallery-canvas-slot{flex:1;min-height:0;display:flex}.gallery-canvas-slot>.gallery-viewport{width:100%}
+@media(min-width:981px){
+ .editor-glass-workspace{--panel-opacity:.55;isolation:isolate;overflow:hidden}
+ .editor-glass-workspace [data-editor-glass]{position:relative;z-index:10;background:rgb(20 20 23 / var(--panel-opacity));backdrop-filter:blur(26px) saturate(110%);-webkit-backdrop-filter:blur(26px) saturate(110%);box-shadow:inset 0 1px #ffffff06;border-color:#ffffff16}
+ .editor-glass-workspace.opaque-panels [data-editor-glass]{backdrop-filter:none;-webkit-backdrop-filter:none}
+ .gallery-glass-workspace{position:relative}.gallery-glass-workspace>.gallery-stage{position:static;overflow:visible;background:transparent}
+ .gallery-glass-workspace .gallery-stage-head,.gallery-glass-workspace .gallery-view-tools,.gallery-glass-workspace .gallery-navigation{z-index:8}
+ .gallery-glass-workspace .gallery-canvas-slot{position:static}
+ .gallery-glass-workspace .gallery-viewport{position:absolute;inset:0;width:100%;height:100%;z-index:1;flex:none}
+ .gallery-glass-workspace>.gallery-stage:fullscreen{position:relative;overflow:hidden;background:#141416}.gallery-stage:fullscreen .panel-transparency{display:none}
+}
+@media(max-width:1200px) and (min-width:981px){.gallery-stage-head>.panel-transparency label{display:none}.gallery-stage-head>.panel-transparency input{width:58px}.gallery-stage-head>span{max-width:170px}}
+@media(max-width:980px){.panel-transparency{display:none}.gallery-canvas-slot{min-height:180px}}
+@supports not (backdrop-filter:blur(1px)){.editor-glass-workspace [data-editor-glass]{background:rgb(20 20 23 / 92%)}}

@@ -1,0 +1,12 @@
+{
+  "name":"book-studio-desktop",
+  "productName":"BOOK STUDIO",
+  "version":"0.3.1",
+  "description":"BOOK STUDIO — 画册、展厅与作品交付工作台",
+  "author":"BOOK STUDIO",
+  "private":true,
+  "packageManager":"pnpm@11.19.0",
+  "main":"main.cjs",
+  "scripts":{"start":"electron .","pack":"electron-builder --config electron-builder.json --publish never"},
+  "devDependencies":{"electron":"44.5.1","electron-builder":"26.15.3"}
+}

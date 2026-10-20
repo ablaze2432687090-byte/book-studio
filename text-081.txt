@@ -1,0 +1,5 @@
+Texture maps from ambientCG.com. Creative Commons CC0 1.0 Universal.
+May be used, modified and redistributed, including commercially.
+Official license: https://docs.ambientcg.com/license/
+Asset sources are recorded in SOURCES.json.
+WebP conversions optimized by BOOK STUDIO; only color/detail maps shipped.

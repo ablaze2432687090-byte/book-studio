@@ -1,0 +1,17 @@
+{
+  "appId":"local.bookstudio.desktop",
+  "productName":"BOOK STUDIO",
+  "directories":{"output":"../release"},
+  "files":["main.cjs","preload.cjs","release-tools.cjs","storage-paths.cjs","release.json","startup.html","startup.js","package.json","!node_modules{,/**/*}"],
+  "extraResources":[
+    {"from":"../LICENSE","to":"LICENSE"},
+    {"from":"../web","to":"studio/web"},
+    {"from":"../assets","to":"studio/assets","filter":["BOOK-STUDIO.ico","BS-LOGO.png","delivery/使用指南.pdf","delivery/User-Guide.pdf","fonts/StudioSansSC-Regular.ttf","fonts/OFL.txt","fonts/SOURCES.md"]},
+    {"from":"../work/desktop-backend/BookStudioService","to":"backend"},
+    {"from":"THIRD_PARTY_NOTICES.md","to":"THIRD_PARTY_NOTICES.md"}
+  ],
+  "asar":true,
+  "npmRebuild":false,
+  "win":{"target":["nsis"],"icon":"../assets/BOOK-STUDIO.ico","artifactName":"BOOK-STUDIO-${version}-Setup.${ext}","signAndEditExecutable":false},
+  "nsis":{"oneClick":false,"perMachine":false,"allowElevation":false,"allowToChangeInstallationDirectory":true,"deleteAppDataOnUninstall":false,"createDesktopShortcut":true,"createStartMenuShortcut":true,"runAfterFinish":false,"displayLanguageSelector":true,"installerLanguages":["zh_CN","en_US"],"include":"installer-language.nsh"}
+}

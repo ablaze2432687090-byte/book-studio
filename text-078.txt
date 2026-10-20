@@ -1,0 +1,60 @@
+/* Page-bound effects: original artwork and the renderer's spine shadows remain untouched. */
+.bs-surface > .bs-layer { position:absolute; inset:0; display:block; z-index:2; border-radius:inherit; pointer-events:none; }
+.bs-surface { isolation:isolate; }
+.bs-surface > .bs-material { opacity:calc(var(--bs-texture,0) * .23); mix-blend-mode:soft-light; }
+.bs-surface > .bs-gloss { opacity:calc(var(--bs-gloss,.45) * .25); }
+.bs-surface[data-bs-material=none] > .bs-material,.bs-surface[data-bs-material=none] > .bs-gloss { display:none; }
+.bs-surface[data-bs-material=matte] > .bs-material { background:radial-gradient(circle,#fff 0 .4px,transparent .8px) 0 0/3px 3px; }
+.bs-surface[data-bs-material=fine] > .bs-material { background:repeating-linear-gradient(4deg,#fff8 0 .5px,#0004 .7px 1px,transparent 1.2px 4px); }
+.bs-surface[data-bs-material=linen] > .bs-material { background:repeating-linear-gradient(0deg,#fff8 0 .5px,transparent .7px 4px),repeating-linear-gradient(90deg,#0008 0 .5px,transparent .7px 4px); }
+.bs-surface[data-bs-material=matte] > .bs-material,.bs-surface[data-bs-material=fine] > .bs-material,.bs-surface[data-bs-material=linen] > .bs-material { opacity:calc(var(--bs-texture) * .08); }
+.bs-surface[data-bs-material=pearl] > .bs-material { background-image:var(--bs-grain); background-size:140px 140px; mix-blend-mode:screen; opacity:calc(var(--bs-texture) * .18); }
+.bs-surface[data-bs-material=pearl] > .bs-gloss { background:radial-gradient(ellipse at var(--bs-mx,50%) var(--bs-my,35%),#fff9,#cbd6ed45 28%,transparent 65%),linear-gradient(var(--bs-tilt,118deg),transparent 22%,#f5e5f430 48%,transparent 72%); }
+.bs-surface[data-bs-material=holographic] > .bs-material { background:repeating-linear-gradient(125deg,#fff7 0 .5px,transparent .8px 4px); }
+.bs-surface[data-bs-material=holographic] > .bs-gloss { opacity:calc(var(--bs-gloss,.45) * .52); mix-blend-mode:screen; background:linear-gradient(var(--bs-tilt,118deg),transparent 8%,#59cde133 20%,#7568c29c 32%,#eb94d0bb 42%,#f5dd8baa 50%,#93d4b599 60%,#9ad4f788 70%,transparent 88%),radial-gradient(ellipse at var(--bs-mx,50%) var(--bs-my,35%),#fff6,transparent 55%); }
+.bs-surface[data-bs-material=kraft] > .bs-material { opacity:calc(.08 + var(--bs-texture) * .32); mix-blend-mode:normal; background:radial-gradient(ellipse,#6c492677 0 .6px,transparent 1px) 0 0/8px 5px,repeating-linear-gradient(12deg,transparent 0 5px,#efdbb925 5.5px 6px,transparent 6.5px 18px),#b3895270; }
+.bs-surface[data-bs-material=recycled] > .bs-material { background:radial-gradient(ellipse,#363329 0 .7px,transparent 1px) 1px 0/11px 8px,radial-gradient(ellipse,#fff 0 .7px,transparent 1.1px) 0 3px/8px 13px,repeating-linear-gradient(35deg,transparent 0 18px,#988d7780 19px 19.7px,transparent 20px 33px); mix-blend-mode:normal; opacity:calc(.03 + var(--bs-texture) * .25); }
+.bs-surface[data-bs-material=cotton] > .bs-material { background:radial-gradient(ellipse,#fff 0 .6px,#0004 1px,transparent 1.5px) 0 0/5px 6px,repeating-linear-gradient(8deg,transparent 0 3px,#fff4 4px 4.5px,transparent 5px 9px); }
+.bs-surface[data-bs-material=coated] > .bs-gloss { background:linear-gradient(var(--bs-tilt,118deg),transparent 20%,#ffffff65 45%,#ffffff20 58%,transparent 78%); }
+.bs-surface[data-bs-material=photo] > .bs-gloss { background:linear-gradient(var(--bs-tilt,118deg),transparent 30%,#fff2 42%,#fffd 46%,#fff8 49%,#fff1 54%,transparent 63%); opacity:calc(var(--bs-gloss) * .4); }
+.bs-surface[data-bs-material=leather] > .bs-material { background:radial-gradient(ellipse at 30% 40%,#fff8 0 1px,#0008 1.4px,transparent 2.4px) 0 0/9px 7px,radial-gradient(ellipse at 65% 70%,#000a 0 1px,#fff5 1.4px,transparent 2px) 2px 3px/7px 11px; opacity:calc(.03 + var(--bs-texture) * .4); }
+.bs-surface[data-bs-material=suede] > .bs-material { background:repeating-linear-gradient(75deg,#fff6 0 .4px,transparent .6px 2px),radial-gradient(ellipse at 30% 30%,#fff4,#0002 65%); }
+.bs-surface[data-bs-material=grid] > .bs-material { background:repeating-linear-gradient(0deg,#fff6 0 .7px,#0008 1px 1.4px,transparent 1.6px 7px),repeating-linear-gradient(90deg,#fff6 0 .7px,#0008 1px 1.4px,transparent 1.6px 7px); }
+.bs-surface[data-bs-material=ribbed] > .bs-material { background:repeating-linear-gradient(90deg,#fff9 0 .6px,#0008 1px 1.8px,transparent 2px 5px); }
+.bs-surface[data-bs-material=hammered] > .bs-material { background:radial-gradient(ellipse,#fff8 0 1.2px,#0006 1.5px,transparent 2.5px) 0 0/11px 9px,radial-gradient(ellipse,#0007 0 1px,#fff7 1.5px,transparent 2px) 3px 4px/9px 13px; }
+.bs-surface[data-bs-material]:not([data-bs-material=pearl]):not([data-bs-material=holographic]):not([data-bs-material=coated]):not([data-bs-material=photo]) > .bs-gloss { display:none; }
+.bs-surface[data-bs-material=cotton] > .bs-material,.bs-surface[data-bs-material=suede] > .bs-material { background-image:var(--bs-grain); background-size:100px 100px; }
+.bs-surface[data-bs-material=leather] > .bs-material { background-image:var(--bs-leather); background-size:110px 110px; mix-blend-mode:soft-light; }
+.bs-surface > .bs-light { opacity:calc(var(--bs-light,.5) * .14); background:var(--bs-env-light,linear-gradient(var(--bs-light-angle,118deg),rgb(var(--bs-light-rgb,255 255 255)/.5),transparent 70%)); }
+.bs-environment:not(.bs-thumbnail)::before { background:var(--bs-env-light,radial-gradient(ellipse at var(--bs-light-x,50%) 28%,rgb(var(--bs-light-rgb,255 255 255)/.18),transparent 70%)) !important; opacity:var(--bs-light,.5) !important; pointer-events:none; }
+.bs-environment[data-bs-light=none] { --bs-env-light:none; }
+.bs-environment[data-bs-light=side],.bs-environment[data-bs-light=window-left] { --bs-env-light:linear-gradient(var(--bs-light-angle,118deg),rgb(var(--bs-light-rgb)/.28),transparent 63%); }
+.bs-environment[data-bs-light=window-right] { --bs-env-light:linear-gradient(calc(360deg - var(--bs-light-angle,118deg)),rgb(var(--bs-light-rgb)/.28),transparent 63%); }
+.bs-environment[data-bs-light=top] { --bs-env-light:linear-gradient(rgb(var(--bs-light-rgb)/.27),transparent 65%); }
+.bs-environment[data-bs-light=warm] { --bs-env-light:radial-gradient(ellipse at var(--bs-light-x,30%) 30%,rgb(var(--bs-light-rgb)/.38),transparent 63%); }
+.bs-environment[data-bs-light=cool],.bs-environment[data-bs-light=gallery] { --bs-env-light:linear-gradient(rgb(var(--bs-light-rgb)/.12),transparent 50%),radial-gradient(ellipse at var(--bs-light-x,50%) 20%,rgb(var(--bs-light-rgb)/.25),transparent 65%); }
+.bs-environment[data-bs-light=spot] { --bs-env-light:radial-gradient(ellipse 35% 62% at var(--bs-light-x,50%) 30%,rgb(var(--bs-light-rgb)/.36),transparent 72%); }
+.bs-environment[data-bs-light=rim] { --bs-env-light:radial-gradient(ellipse at 10% 60%,rgb(var(--bs-light-rgb)/.18),transparent 45%),radial-gradient(ellipse at 90% 25%,rgb(var(--bs-light-rgb)/.2),transparent 45%); }
+.bs-environment .book.bs-effects:not(.no-shadow) { filter:drop-shadow(var(--bs-shadow-x,0px) 28px var(--bs-shadow-blur,30px) rgb(0 0 0/var(--contact-shadow,.42))); }
+.bs-environment.bs-light-scene { color:#252527; }
+.bs-environment.bs-light-scene .stage-head,.bs-environment.bs-light-scene .pager { border-color:#a6a6aa; }
+.bs-environment.bs-light-scene .book-header,.bs-environment.bs-light-scene .book-footer { color:#39393b; }
+.bs-effects[data-finish=none] .album-texture { display:none; }
+.book.bs-effects .bs-surface::after { opacity:0; }
+.book.bs-effects .bs-surface.cover-finish-matte::after { opacity:.05; }
+.book.bs-effects .bs-surface.cover-finish-linen::after { opacity:.07; }
+.book.bs-effects .bs-surface.cover-finish-soft-touch::after { opacity:.08; }
+.bs-effects .album-light { opacity:calc(var(--bs-light,.5) * .15); background:linear-gradient(var(--bs-light-angle),rgb(var(--bs-light-rgb)/.45),transparent 65%); }
+.bs-effects .album-light { display:none; }
+.bs-thumbnail .bs-effects { --bs-mx:50%; --bs-my:35%; }
+.low-performance .bs-surface[data-bs-material=pearl] > .bs-material { background-size:180px 180px; }
+@media (prefers-reduced-motion:reduce), (pointer:coarse) { .bs-gloss { transition:none; } }
+/* Locally bundled CC0 texture maps, blended without replacing original artwork. */
+.bs-surface[data-bs-material=leather] > .bs-material { background-image:var(--bs-leather-map); background-size:240px 240px; }
+.bs-surface[data-bs-material=linen] > .bs-material,.bs-surface[data-bs-material=suede] > .bs-material { background-image:var(--bs-fabric-map); background-size:220px 220px; opacity:calc(var(--bs-texture) * .3); }
+.bs-surface[data-bs-material=matte] > .bs-material,.bs-surface[data-bs-material=cotton] > .bs-material,.bs-surface[data-bs-material=fine] > .bs-material { background-image:var(--bs-paper-map); background-size:210px 210px; opacity:calc(var(--bs-texture) * .26); }
+.bs-surface[data-bs-material=kraft] > .bs-material { background-image:var(--bs-paper-map); background-size:210px 210px; background-color:#b3895270; }
+.bs-surface > .bs-relief { display:none; }
+.bs-surface[data-bs-material=leather] > .bs-relief,.bs-surface[data-bs-material=linen] > .bs-relief,.bs-surface[data-bs-material=suede] > .bs-relief,.bs-surface[data-bs-material=cotton] > .bs-relief,.bs-surface[data-bs-material=kraft] > .bs-relief { display:block; background-image:var(--bs-paper-map); background-size:210px 210px; mix-blend-mode:overlay; opacity:calc(var(--bs-texture) * var(--bs-light,.5) * .16); mask-image:linear-gradient(var(--bs-light-angle,118deg),#000,transparent 75%); }
+.bs-surface[data-bs-material=leather] > .bs-relief { background-image:var(--bs-leather-map); background-size:240px 240px; }
+.bs-surface[data-bs-material=linen] > .bs-relief,.bs-surface[data-bs-material=suede] > .bs-relief { background-image:var(--bs-fabric-map); background-size:220px 220px; }

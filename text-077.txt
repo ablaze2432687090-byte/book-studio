@@ -1,0 +1,231 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <script src="/i18n-catalog.js"></script><script src="/studio-i18n.js"></script><script src="/viewer-locale.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>照片翻页册</title>
+    <link rel="stylesheet" href="styles.css?v=20261009-effects-1" />
+    <link rel="stylesheet" href="presentation.css?v=20261009-effects-1" />
+    <style>
+      .viewer-nav { position: fixed; left: 16px; top: 16px; z-index: 40; display:inline-flex; align-items:center; gap:8px; min-height:36px; text-decoration: none; border: 1px solid #44444b; border-radius: 4px; padding: 8px 12px; background: #19191ce6; color: #d7d7de; backdrop-filter: blur(12px); font: 500 12px/1.3 system-ui,sans-serif; }
+      .viewer-nav:hover { border-color: #8c2530; background: #171719; }
+      .viewer-nav:focus-visible { outline:2px solid #cb0037; outline-offset:3px; }
+      .book-page.dynamic-photo { background: var(--page-surface, #f4f0e8); }
+      .book-page.dynamic-photo img { width: 100%; height: 100%; display: block; object-fit: var(--image-fit, contain); background: var(--page-surface, #f4f0e8); }
+      .generated-cover { height: 100%; padding: 12%; display: flex; flex-direction: column; justify-content: space-between; background: var(--cover-color); color: white; }
+      .generated-cover small { letter-spacing: .2em; text-transform: uppercase; }
+      .generated-cover h2 { margin: 0; font-size: clamp(2rem, 7vw, 4.8rem); line-height: .95; letter-spacing: -.055em; }
+      .generated-cover span { letter-spacing: .16em; font-size: .75rem; }
+      #loading { position: fixed; inset: 0; display: grid; place-items: center; background: radial-gradient(circle at 50% 38%,#242426,#0b0b0d 58%); z-index: 30; color: #eee; transition: opacity .36s ease, visibility .36s ease; }
+      #loading.hidden { opacity: 0; visibility: hidden; pointer-events: none; }
+      .loading-book { width: min(620px,78vw); aspect-ratio: 16/10; display: grid; place-items: center; align-content: center; gap: 14px; border: 1px solid #29292c; background: linear-gradient(145deg,#202023,#111113); box-shadow: 0 38px 70px #0009; }
+      .loading-book small { color: #88888e; font: 600 9px/1 system-ui,sans-serif; letter-spacing: .22em; }
+      .loading-book h2 { margin: 0; font: 400 clamp(24px,4vw,38px)/1.1 Georgia,"Songti SC",serif; }
+      .loading-track { width: min(340px,65%); height: 2px; margin-top: 10px; background:#39393d; overflow:hidden; }
+      .loading-track i { display:block; width:0; height:100%; background:#c60036; transition:width .2s ease; }
+      .loading-book p { margin:0; color:#8b8b90; font:10px/1.4 system-ui,sans-serif; }
+      .loading-book button { min-height:40px; padding:0 18px; border:1px solid #8e0028; color:#fff; background:#a9002f; font:600 11px/1 system-ui,sans-serif; cursor:pointer; }
+    </style>
+  </head>
+  <body>
+    <a class="viewer-nav" href="/">← 返回编辑</a>
+    <div id="loading"><div class="loading-book"><small>BOOK STUDIO</small><h2 id="loadingTitle" data-user-content>正在准备画册</h2><div class="loading-track"><i id="loadingProgress"></i></div><p id="loadingText">优先加载封面与首屏 · 0%</p><button id="loadingRetry" type="button" hidden>重新加载</button></div></div>
+    <main class="room">
+      <header class="book-header viewer-chrome">
+        <span>PHOTO ALBUM</span>
+        <h1 id="album-title">照片翻页册</h1>
+        <span id="orientation">打开的跨页</span>
+      </header>
+      <section class="stage" aria-label="互动照片翻页册">
+        <div class="book-rig">
+          <div id="book" class="book" data-page-width="480" data-page-height="640">
+            <article class="book-page" data-density="hard" aria-label="封面"></article>
+            <article class="book-page" data-density="hard" aria-label="封底"></article>
+          </div>
+        </div>
+      </section>
+      <footer class="controls viewer-chrome" aria-label="画册控制">
+        <button id="previous" type="button" aria-label="上一页">&larr;</button>
+        <div class="status" aria-live="polite">
+          <span id="page-status">封面</span>
+          <small>拖动、轻扫、点击页角，或使用方向键</small>
+        </div>
+        <button id="next" type="button" aria-label="下一页">&rarr;</button>
+        <div class="viewer-zoom-toolbar" aria-label="画册观看控制">
+          <button id="viewerZoomOut" type="button" aria-label="缩小画册" title="缩小">−</button>
+          <input id="viewerZoom" type="range" min="50" max="200" step="5" value="100" aria-label="画册缩放比例">
+          <output id="viewerZoomValue" for="viewerZoom">100%</output>
+          <button id="viewerZoomIn" type="button" aria-label="放大画册" title="放大">＋</button>
+          <button id="viewerZoomFit" type="button" aria-label="适应屏幕" title="适应屏幕">⌗</button>
+          <button id="viewerFullscreen" type="button" aria-label="进入全屏" title="全屏">⛶</button>
+          <span class="viewer-toolbar-divider" aria-hidden="true"></span>
+          <button class="viewer-close-book" id="viewerCloseBook" type="button" aria-label="合上画册" title="合上画册"><span aria-hidden="true">◫</span><small>合上</small></button>
+        </div>
+        <div class="preload-strip" id="preloadStrip" aria-live="polite">
+          <span>正在预载后续页面</span><i><b id="preloadProgress"></b></i><small id="preloadCount">0 / 0</small>
+        </div>
+      </footer>
+    </main>
+    <div class="rotate-hint" id="rotateHint" role="status"><span aria-hidden="true">↻</span>横屏观看效果更佳</div>
+    <!-- PUBLIC_ALBUM_DATA -->
+    <script src="composition.js?v=20261008-1"></script>
+    <script src="presentation.js?v=20261009-effects-1"></script>
+    <script>
+      const ratioPairs = { '16:9':[16,9], '4:3':[4,3], '16:10':[16,10], '2:3':[2,3], '1:1':[1,1], '2:1':[2,1], '1.618:1':[1.618,1] };
+      const customSize = (width, height) => { const scale = 640 / Math.max(width, height); return [Math.max(1, Math.round(width * scale)), Math.max(1, Math.round(height * scale))]; };
+      const albumSize = (album) => {
+        let pair = album.ratio === 'custom' ? [Number(album.customWidth) || 3, Number(album.customHeight) || 4] : [...(ratioPairs[album.ratio] || ratioPairs['4:3'])];
+        if (pair[0] !== pair[1]) {
+          const short = Math.min(...pair); const long = Math.max(...pair);
+          pair = album.landscape ? [long, short] : [short, long];
+        }
+        return customSize(pair[0], pair[1]);
+      };
+      const escapeHtml = (value = '') => { const node = document.createElement('div'); node.textContent = value; return node.innerHTML; };
+      const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
+      const lowPower = reducedMotion || (navigator.deviceMemory && navigator.deviceMemory <= 4) || (navigator.hardwareConcurrency && navigator.hardwareConcurrency <= 4);
+      document.body.classList.toggle('low-performance', Boolean(lowPower));
+      document.querySelector('#loadingRetry').onclick = () => location.reload();
+      const failLoading = (message) => {
+        document.querySelector('#loadingTitle').textContent = '画册加载失败';
+        document.querySelector('#loadingText').textContent = message || '请检查网络后重试';
+        document.querySelector('#loadingRetry').hidden = false;
+      };
+      window.addEventListener('error', (event) => {
+        if (!document.querySelector('#loading').classList.contains('hidden')) failLoading('画册组件初始化失败，请重新加载');
+      });
+
+      const requestedId = new URLSearchParams(location.search).get('id');
+      const editorReturn=document.querySelector('.viewer-nav');
+      if(editorReturn)editorReturn.href=requestedId?'/?id='+encodeURIComponent(requestedId):'/projects.html?type=book';
+      const albumEndpoint = requestedId ? `/api/album?id=${encodeURIComponent(requestedId)}` : '/api/album';
+      const fetchAlbum = async () => {
+        const response = await fetch(albumEndpoint, { cache: 'no-store' });
+        if (response.ok) return response.json();
+        if (!requestedId) throw new Error('无法读取画册');
+        const fallback = await fetch('/api/album', { cache: 'no-store' });
+        if (!fallback.ok) throw new Error('无法读取画册');
+        const current = await fallback.json();
+        const nextUrl = new URL(location.href);
+        nextUrl.searchParams.set('id', current.id);
+        history.replaceState({}, '', nextUrl);
+        return current;
+      };
+      const albumSource = window.__PUBLIC_ALBUM__ ? Promise.resolve(window.__PUBLIC_ALBUM__) : fetchAlbum();
+      const preloadImage = (source) => new Promise((resolve) => {
+        const image = new Image();
+        const timer = setTimeout(() => resolve({ source, ok: false }), 8000);
+        image.onload = () => { clearTimeout(timer); resolve({ source, ok: true }); };
+        image.onerror = () => { clearTimeout(timer); resolve({ source, ok: false }); };
+        image.src = source;
+      });
+      albumSource.then(async (album) => {
+        if(editorReturn&&album.id)editorReturn.href='/?id='+encodeURIComponent(album.id);
+        const book = document.querySelector('#book');
+        const [width, height] = albumSize(album);
+        book.dataset.pageWidth = width;
+        book.dataset.pageHeight = height;
+        book.dataset.landscape = String(width > height);
+        document.documentElement.style.setProperty('--image-fit', album.fit || 'cover');
+        const textureOpacity = album.material === 'none' ? 0 : (album.texture || 0) / 300;
+        document.documentElement.style.setProperty('--texture-opacity', String(lowPower ? Math.min(textureOpacity, .045) : textureOpacity));
+        document.documentElement.style.setProperty('--paper-edge', `${4 + (album.thickness || 3) * 2}px`);
+        document.documentElement.style.setProperty('--edge-color', ({ ivory:'#ebe5d9', white:'#f7f7f4', gray:'#a5a39f', black:'#29292b', kraft:'#b89568' })[album.edgeColor] || '#ebe5d9');
+        document.documentElement.style.setProperty('--corner-radius', `${Math.max(0, Math.min(8, album.cornerRadius ?? 3))}px`);
+        document.documentElement.style.setProperty('--contact-shadow', String(Math.max(0, Math.min(70, album.contactShadow ?? 42)) / 100));
+        document.documentElement.style.setProperty('--light-intensity', String(album.lighting === 'none' ? 0 : Math.max(0, Math.min(100, album.lightIntensity ?? 50)) / 100));
+        document.body.className = `scene-${album.scene || 'charcoal'}`;
+        if (lowPower) document.body.classList.add('low-performance');
+        document.body.classList.add(`lighting-${album.lighting || 'soft'}`);
+        document.body.dataset.immersive = String(album.immersive !== false);
+        document.body.dataset.introMotion = String(album.introMotion !== false && !reducedMotion);
+        if (album.scene === 'custom' && album.backgroundImage) document.body.style.setProperty('--scene-image', `url("${album.backgroundImage}")`);
+        book.classList.add(`material-${album.material || 'none'}`);
+        book.dataset.flipSpeed = String(album.flipSpeed || 760);
+        book.dataset.turnStyle = album.turnStyle || 'natural';
+        book.dataset.shadowOpacity = String((album.shadowOpacity || 42) / 100);
+        book.dataset.drawShadow = String(album.shadow !== false);
+        document.querySelector('#album-title').textContent = album.title || '照片翻页册';
+        document.title = album.title || '照片翻页册';
+
+        const pages = album.pages.length ? [...album.pages] : [{ id:'cover', name:'封面', color:'#315a50', cover:true }, { id:'back', name:'封底', color:'#315a50', cover:true }];
+        if (pages.length % 2 === 1) pages.splice(pages.length - 1, 0, { id:'blank', name:'空白页', color:'#f4f0e8' });
+        book.replaceChildren();
+        pages.forEach((page, index) => {
+          const leaf = document.createElement('article');
+          leaf.className = `book-page${page.src ? ' dynamic-photo' : ''}`;
+          leaf.setAttribute('aria-label', page.name || `第 ${index + 1} 页`);
+          if (index === 0 || index === pages.length - 1) leaf.dataset.density = 'hard';
+          if (page.cover) leaf.classList.add(`cover-finish-${album.coverFinish || 'none'}`);
+          if (page.src) {
+            const image = document.createElement('img'); image.src = page.src; image.alt = page.name || ''; image.decoding = 'async'; image.loading = index < 4 ? 'eager' : 'lazy'; image.fetchPriority = index < 2 ? 'high' : 'auto';
+            const frame = document.createElement('div'); frame.className = 'image-frame';
+            frame.appendChild(image); leaf.appendChild(frame);
+            leaf.style.background = page.color || '#d2d0ca';
+            PageComposition.mount(frame, image, album, page);
+          } else if (page.cover) {
+            const cover = document.createElement('div'); cover.className = 'generated-cover'; cover.style.setProperty('--cover-color', page.color || '#315a50');
+            const kicker = document.createElement('small'); kicker.textContent = 'PHOTO JOURNAL';
+            const title = document.createElement('h2'); title.textContent = album.title || '照片翻页册';
+            const ending = document.createElement('span'); ending.textContent = index === 0 ? '2026' : 'THE END';
+            cover.append(kicker, title, ending); leaf.appendChild(cover);
+          } else {
+            leaf.style.background = page.color || '#f4f0e8';
+          }
+          book.appendChild(leaf);
+          BookPresentation.surface(leaf,index===0||index===pages.length-1);
+        });
+        BookPresentation.apply(document.body,book,album);
+
+        const photoSources = [...new Set(pages.map((page) => page.src).filter(Boolean))];
+        const urgentSources = photoSources.slice(0, lowPower ? 1 : 3);
+        let loaded = 0;
+        await Promise.allSettled(urgentSources.map(async (source) => {
+          await preloadImage(source);
+          loaded += 1;
+          const percent = urgentSources.length ? Math.round(loaded / urgentSources.length * 100) : 100;
+          document.querySelector('#loadingProgress').style.width = `${percent}%`;
+          document.querySelector('#loadingText').textContent = `优先加载封面与首屏 · ${percent}%`;
+        }));
+
+        const runtime = document.createElement('script');
+        runtime.src = 'vendor/page-flip.browser.js?v=20260906-1';
+        runtime.onload = () => {
+          const controller = document.createElement('script');
+          controller.src = 'flipbook.js?v=20261009-fit-1';
+          controller.onload = () => {
+            if (!window.__FLIPBOOK_READY__) {
+              failLoading('画册控制组件初始化失败，请重新加载');
+              return;
+            }
+            document.querySelector('#loading').classList.add('hidden');
+            const remaining = photoSources.slice(urgentSources.length);
+            const total = remaining.length;
+            if (!total) {
+              document.querySelector('#preloadStrip').classList.add('complete');
+              document.querySelector('#preloadCount').textContent = '已全部加载';
+              return;
+            }
+            let completed = 0;
+            let cursor = 0;
+            const worker = async () => {
+              while (cursor < total) {
+                const source = remaining[cursor++];
+                await preloadImage(source);
+                completed += 1;
+                document.querySelector('#preloadProgress').style.width = `${completed / total * 100}%`;
+                document.querySelector('#preloadCount').textContent = `${completed} / ${total}`;
+              }
+            };
+            Promise.all(Array.from({ length: Math.min(lowPower ? 1 : 2, total) }, worker)).then(() => setTimeout(() => document.querySelector('#preloadStrip').classList.add('complete'), 500));
+          };
+          controller.onerror = () => failLoading('画册控制组件加载失败，请重试');
+          document.body.appendChild(controller);
+        };
+        runtime.onerror = () => failLoading('翻页组件加载失败，请重试');
+        document.body.appendChild(runtime);
+      }).catch((error) => failLoading(error.message));
+    </script>
+  </body>
+</html>

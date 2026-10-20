@@ -1,0 +1,4 @@
+async function refresh(){const info=await BookStudioDesktop.info(),t=text=>info.translations?.[text]||text;document.documentElement.lang=info.language||'zh-CN';document.querySelector('#heading').textContent=t(info.error?'工作台暂时无法启动':'正在准备你的创作空间');document.querySelector('#message').textContent=info.error||t('启动本地服务，检查项目数据。无需打开浏览器。');document.querySelector('#retry').textContent=t('重新连接');document.querySelector('#logs').textContent=t('打开日志文件夹');if(info.error){document.querySelector('#progress').hidden=true;document.querySelector('#actions').hidden=false;}}
+document.querySelector('#retry').onclick=async()=>{try{await BookStudioDesktop.retry();}catch{await refresh();}};
+document.querySelector('#logs').onclick=()=>BookStudioDesktop.reveal('logs');
+BookStudioDesktop.onAction(action=>{if(action==='service-error')refresh();});refresh();
